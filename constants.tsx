@@ -1,3 +1,4 @@
+
 import { MenuItem, BlogPost, SiteConfig } from './types';
 
 export const INITIAL_CONFIG: SiteConfig = {
@@ -22,7 +23,14 @@ export const INITIAL_CONFIG: SiteConfig = {
     "Mon - Thu: 5:00 PM - 10:00 PM",
     "Fri - Sat: 5:00 PM - 11:00 PM",
     "Sun: 12:00 PM - 9:00 PM"
-  ]
+  ],
+  // Updated Logo Settings with the user-provided image
+  logoUrl: "https://image2url.com/r2/default/images/1768915452491-fb96a77d-2a9e-4450-a140-d09dbf6f1d02.jpeg",
+  logoHeight: 80,
+  logoHeightFooter: 60,
+  logoPadding: 16,
+  showLogoHeader: true,
+  showLogoFooter: true
 };
 
 export const MENU_ITEMS: MenuItem[] = [

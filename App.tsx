@@ -1,10 +1,11 @@
+
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { HashRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { 
   Menu as MenuIcon, X, Instagram, Facebook, Mail, MapPin, 
   Phone, Settings, Check, ChevronRight, ArrowRight,
   Plus, Trash2, Globe, Layout, Utensils, PenTool, ExternalLink,
-  Lock, LogOut, UserCheck, Image as ImageIcon
+  Lock, LogOut, UserCheck, Image as ImageIcon, Eye, EyeOff, Maximize, Minimize
 } from 'lucide-react';
 import { INITIAL_CONFIG, MENU_ITEMS, BLOG_POSTS } from './constants';
 import { SiteConfig, MenuItem, BlogPost, SEOData } from './types';
@@ -96,53 +97,70 @@ const Header = () => {
     { name: 'Blog', path: '/blog' },
     { name: 'Contact', path: '/contact' },
   ];
+
   return (
     <nav className="sticky top-0 z-50 bg-navy text-sand border-b border-teal/30 shadow-xl backdrop-blur-md bg-opacity-95">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-20 items-center">
-          <Link to="/" className="flex flex-col items-center group">
-            <span className="text-3xl font-normal tracking-[0.15em] font-serif text-sand drop-shadow-[0_0_8px_rgba(222,185,146,0.3)] group-hover:tracking-[0.2em] transition-all duration-500">{config.name}</span>
-            <span className="text-[10px] uppercase tracking-[0.2em] text-teal font-bold hidden sm:block">Fine Dining & Seafood</span>
+        <div className="flex justify-between h-24 items-center">
+          <Link to="/" className="flex items-center group overflow-visible">
+            {config.showLogoHeader && config.logoUrl ? (
+              <div 
+                style={{ padding: `${config.logoPadding}px 0` }}
+                className="flex items-center justify-center transition-transform duration-500 group-hover:scale-105"
+              >
+                <img 
+                  src={config.logoUrl} 
+                  alt={`${config.name} Logo`} 
+                  style={{ height: `${config.logoHeight}px` }}
+                  className="w-auto object-contain max-w-[200px] sm:max-w-none rounded-full border border-teal/10 shadow-lg"
+                />
+              </div>
+            ) : (
+              <div className="flex flex-col">
+                <span className="text-3xl font-normal tracking-[0.15em] font-serif text-sand drop-shadow-[0_0_8px_rgba(222,185,146,0.3)] group-hover:tracking-[0.2em] transition-all duration-500 leading-none">{config.name}</span>
+                <span className="text-[10px] uppercase tracking-[0.2em] text-teal font-bold hidden sm:block mt-1">Fine Dining & Seafood</span>
+              </div>
+            )}
           </Link>
-          <div className="hidden md:flex space-x-8">
+
+          <div className="hidden md:flex space-x-8 items-center">
             {navLinks.map((link) => (
               link.external ? (
-                <a key={link.path} href={link.path} target="_blank" rel="noopener noreferrer" className="text-xs font-bold tracking-widest uppercase font-lora hover:text-teal transition-all text-sand">
+                <a key={link.path} href={link.path} target="_blank" rel="noopener noreferrer" className="text-[10px] font-bold tracking-[0.2em] uppercase font-lora hover:text-teal transition-all text-sand">
                   {link.name}
                 </a>
               ) : (
-                <Link key={link.path} to={link.path} className={`text-xs font-bold tracking-widest uppercase font-lora hover:text-teal transition-all ${location.pathname === link.path ? 'text-teal border-b border-teal' : 'text-sand'}`}>
+                <Link key={link.path} to={link.path} className={`text-[10px] font-bold tracking-[0.2em] uppercase font-lora hover:text-teal transition-all ${location.pathname === link.path ? 'text-teal' : 'text-sand'}`}>
                   {link.name}
                 </Link>
               )
             ))}
+            <Link to="/reservations" className="bg-teal text-navy px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-sand hover:shadow-[0_0_15px_rgba(27,160,152,0.4)] transition-all font-lora ml-4">Book Now</Link>
           </div>
-          <div className="hidden md:block">
-            <Link to="/reservations" className="bg-teal text-navy px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-sand hover:shadow-[0_0_15px_rgba(27,160,152,0.4)] transition-all font-lora">Book Now</Link>
-          </div>
+
           <div className="md:hidden flex items-center">
-            <button onClick={() => setIsOpen(!isOpen)} className="text-sand hover:text-teal transition-colors">
+            <button onClick={() => setIsOpen(!isOpen)} className="text-sand hover:text-teal transition-colors p-2">
               {isOpen ? <X size={28} /> : <MenuIcon size={28} />}
             </button>
           </div>
         </div>
       </div>
       {isOpen && (
-        <div className="md:hidden bg-navy border-t border-teal/30 animate-in fade-in slide-in-from-top duration-300">
-          <div className="px-4 pt-2 pb-6 space-y-1 sm:px-3">
+        <div className="md:hidden bg-navy border-t border-teal/30 animate-in fade-in slide-in-from-top duration-300 h-screen overflow-y-auto">
+          <div className="px-6 py-8 space-y-2">
             {navLinks.map((link) => (
               link.external ? (
-                <a key={link.path} href={link.path} target="_blank" rel="noopener noreferrer" onClick={() => setIsOpen(false)} className="block px-3 py-4 text-base font-medium text-sand hover:text-teal border-b border-teal/10 font-lora">
+                <a key={link.path} href={link.path} target="_blank" rel="noopener noreferrer" onClick={() => setIsOpen(false)} className="block py-4 text-xl font-serif italic text-sand hover:text-teal border-b border-teal/10">
                   {link.name}
                 </a>
               ) : (
-                <Link key={link.path} to={link.path} onClick={() => setIsOpen(false)} className="block px-3 py-4 text-base font-medium text-sand hover:text-teal border-b border-teal/10 font-lora">
+                <Link key={link.path} to={link.path} onClick={() => setIsOpen(false)} className="block py-4 text-xl font-serif italic text-sand hover:text-teal border-b border-teal/10">
                   {link.name}
                 </Link>
               )
             ))}
-            <div className="pt-6">
-               <Link to="/reservations" onClick={() => setIsOpen(false)} className="block w-full text-center bg-teal text-navy px-6 py-4 rounded-xl text-sm font-bold uppercase tracking-widest font-lora shadow-lg">Make a Reservation</Link>
+            <div className="pt-8">
+               <Link to="/reservations" onClick={() => setIsOpen(false)} className="block w-full text-center bg-teal text-navy px-6 py-5 rounded-2xl text-xs font-bold uppercase tracking-widest font-lora shadow-lg">Make a Reservation</Link>
             </div>
           </div>
         </div>
@@ -157,52 +175,83 @@ const Footer = () => {
     if (isAuthenticated) setIsDashboardOpen(true);
     else setShowLoginModal(true);
   };
+
   return (
-    <footer className="bg-navy text-sand pt-20 pb-10 border-t border-teal/20 relative overflow-hidden">
+    <footer className="bg-navy text-sand pt-24 pb-12 border-t border-teal/20 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-          <div>
-            <h3 className="text-3xl font-normal font-serif mb-6 text-teal tracking-[0.1em]">{config.name}</h3>
-            <p className="text-sand text-sm leading-relaxed mb-6 opacity-80 font-lora italic">Modern British seafood in the heart of Greenwich Village.</p>
-            <div className="flex space-x-4">
-              <a href={config.instagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-teal/30 flex items-center justify-center text-sand hover:text-navy hover:bg-teal transition-all"><Instagram size={18} /></a>
-              <a href={config.facebook} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-teal/30 flex items-center justify-center text-sand hover:text-navy hover:bg-teal transition-all"><Facebook size={18} /></a>
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-16 mb-20">
+          <div className="md:col-span-4 lg:col-span-5">
+            <div className="flex flex-col items-start gap-8 mb-10">
+              {config.showLogoFooter && config.logoUrl ? (
+                <Link to="/" className="transition-transform hover:scale-105 duration-500">
+                  <img 
+                    src={config.logoUrl} 
+                    alt={`${config.name} Logo Footer`} 
+                    style={{ height: `${config.logoHeightFooter}px` }}
+                    className="w-auto object-contain opacity-90 hover:opacity-100 transition-opacity rounded-full border border-teal/10 shadow-lg"
+                  />
+                </Link>
+              ) : (
+                <h3 className="text-4xl font-normal font-serif text-teal tracking-tighter italic">{config.name}</h3>
+              )}
+              <p className="text-sand/70 text-lg leading-relaxed max-w-sm italic font-lora">
+                {config.tagline}. Authentically British, distinctly New York.
+              </p>
+            </div>
+            <div className="flex space-x-6">
+              <a href={config.instagram} target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full border border-teal/30 flex items-center justify-center text-sand hover:text-navy hover:bg-teal hover:border-teal transition-all duration-300"><Instagram size={20} /></a>
+              <a href={config.facebook} target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full border border-teal/30 flex items-center justify-center text-sand hover:text-navy hover:bg-teal hover:border-teal transition-all duration-300"><Facebook size={20} /></a>
             </div>
           </div>
-          <div>
-            <h4 className="text-[10px] uppercase tracking-[0.3em] font-bold mb-8 text-teal font-lora opacity-80">Navigation</h4>
-            <ul className="space-y-4 text-sm font-lora">
-              <li><Link to="/menu" className="text-sand hover:text-teal transition-colors">The Menu</Link></li>
-              <li><Link to="/reservations" className="text-sand hover:text-teal transition-colors">Reservations</Link></li>
-              <li><Link to="/blog" className="text-sand hover:text-teal transition-colors">Kitchen Notes</Link></li>
+
+          <div className="md:col-span-2">
+            <h4 className="text-[10px] uppercase tracking-[0.4em] font-bold mb-10 text-teal/60 font-lora">Explore</h4>
+            <ul className="space-y-5 text-sm font-lora italic">
+              <li><Link to="/menu" className="text-sand/70 hover:text-teal transition-colors">The Menu</Link></li>
+              <li><Link to="/about" className="text-sand/70 hover:text-teal transition-colors">Our Story</Link></li>
+              <li><Link to="/reservations" className="text-sand/70 hover:text-teal transition-colors">Bookings</Link></li>
+              <li><Link to="/blog" className="text-sand/70 hover:text-teal transition-colors">Notes</Link></li>
             </ul>
           </div>
-          <div>
-            <h4 className="text-[10px] uppercase tracking-[0.3em] font-bold mb-8 text-teal font-lora opacity-80">Get in Touch</h4>
-            <ul className="space-y-4 text-sm text-sand font-lora">
-              <li className="flex items-start"><MapPin size={16} className="mr-3 mt-0.5 text-teal" /><span className="opacity-80 leading-relaxed">{config.address}</span></li>
-              <li className="flex items-center"><Phone size={16} className="mr-3 text-teal" /><span className="opacity-80">{config.phone}</span></li>
-              <li className="flex items-center"><Mail size={16} className="mr-3 text-teal" /><a href={`mailto:${config.email}`} className="opacity-80 hover:text-teal transition-colors">{config.email}</a></li>
+
+          <div className="md:col-span-3">
+            <h4 className="text-[10px] uppercase tracking-[0.4em] font-bold mb-10 text-teal/60 font-lora">Visit</h4>
+            <ul className="space-y-6 text-sm text-sand/70 font-lora">
+              <li className="flex items-start italic leading-relaxed">
+                <MapPin size={18} className="mr-4 mt-1 text-teal flex-shrink-0" />
+                <span>{config.address}</span>
+              </li>
+              <li className="flex items-center italic">
+                <Phone size={18} className="mr-4 text-teal flex-shrink-0" />
+                <span>{config.phone}</span>
+              </li>
+              <li className="flex items-center italic">
+                <Mail size={18} className="mr-4 text-teal flex-shrink-0" />
+                <a href={`mailto:${config.email}`} className="hover:text-teal transition-colors">{config.email}</a>
+              </li>
             </ul>
           </div>
-          <div>
-            <h4 className="text-[10px] uppercase tracking-[0.3em] font-bold mb-8 text-teal font-lora opacity-80">Newsletter</h4>
-            <div className="flex group">
-              <input type="email" placeholder="Email address" className="bg-navy-light border border-teal/30 px-4 py-3 w-full text-sm outline-none text-sand font-lora placeholder-sand/30" />
-              <button className="bg-teal px-5 py-3 hover:bg-sand transition-colors text-navy flex items-center justify-center"><ArrowRight size={20} /></button>
+
+          <div className="md:col-span-3 lg:col-span-2">
+            <h4 className="text-[10px] uppercase tracking-[0.4em] font-bold mb-10 text-teal/60 font-lora">Dispatch</h4>
+            <p className="text-[11px] mb-6 italic opacity-50 uppercase tracking-widest font-bold">Join the inner circle.</p>
+            <div className="flex group border-b border-teal/30 pb-2">
+              <input type="email" placeholder="Email" className="bg-transparent px-0 py-2 w-full text-xs outline-none text-sand font-lora placeholder-sand/30" />
+              <button className="text-teal p-2 hover:translate-x-1 transition-transform cursor-pointer"><ArrowRight size={18} /></button>
             </div>
           </div>
         </div>
-        <div className="mt-20 pt-8 border-t border-teal/10 flex flex-col md:flex-row justify-between items-center text-[10px] uppercase tracking-[0.3em] text-sand opacity-40 font-lora">
-          <div className="flex flex-col md:flex-row gap-4 md:gap-8 items-center">
-            <p>© {new Date().getFullYear()} {config.name}. Built with Precision.</p>
-            <button onClick={handleStaffToggle} className="flex items-center gap-2 hover:text-teal transition-colors group cursor-pointer">
-              {isAuthenticated ? <Settings size={12} className="group-hover:rotate-90 transition-transform" /> : <Lock size={12} />} Staff Portal
+
+        <div className="pt-12 border-t border-teal/10 flex flex-col md:flex-row justify-between items-center text-[9px] uppercase tracking-[0.4em] text-sand/40 font-lora">
+          <div className="flex flex-col md:flex-row gap-6 md:gap-12 items-center text-center md:text-left">
+            <p>© {new Date().getFullYear()} {config.name}. All Rights Reserved.</p>
+            <button onClick={handleStaffToggle} className="flex items-center gap-3 hover:text-teal transition-colors group cursor-pointer font-bold">
+              {isAuthenticated ? <Settings size={14} className="group-hover:rotate-90 transition-transform" /> : <Lock size={14} />} Staff Login
             </button>
           </div>
-          <div className="flex space-x-8 mt-4 md:mt-0">
-            <a href="#" className="hover:text-teal transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-teal transition-colors">Terms of Service</a>
+          <div className="flex space-x-10 mt-8 md:mt-0">
+            <a href="#" className="hover:text-teal transition-colors">Privacy</a>
+            <a href="#" className="hover:text-teal transition-colors">Terms</a>
           </div>
         </div>
       </div>
@@ -211,7 +260,7 @@ const Footer = () => {
 };
 
 const ThemePanel = () => {
-  const [activeTab, setActiveTab] = useState<'general' | 'seo' | 'blog' | 'menu'>('general');
+  const [activeTab, setActiveTab] = useState<'general' | 'seo' | 'blog' | 'menu' | 'logo'>('general');
   const [emailInput, setEmailInput] = useState('');
   const [loginError, setLoginError] = useState('');
   const { 
@@ -230,7 +279,7 @@ const ThemePanel = () => {
       setShowLoginModal(false);
       setIsDashboardOpen(true);
     } else {
-      setLoginError('Access denied. Staff email required.');
+      setLoginError('Staff credentials required.');
     }
   };
 
@@ -239,61 +288,165 @@ const ThemePanel = () => {
   return (
     <>
       {showLoginModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-navy/95 backdrop-blur-xl animate-in fade-in duration-300">
-          <div className="max-w-md w-full bg-navy-light border border-teal/30 rounded-[40px] p-12 relative overflow-hidden shadow-2xl">
-            <button onClick={() => setShowLoginModal(false)} className="absolute top-8 right-8 text-sand/50 hover:text-teal transition-colors cursor-pointer"><X size={24} /></button>
-            <div className="text-center mb-10">
-              <div className="w-16 h-16 bg-teal/10 text-teal rounded-full flex items-center justify-center mx-auto mb-6"><Lock size={32} /></div>
-              <h2 className="text-3xl font-serif italic text-white mb-2 uppercase tracking-tighter">Staff Portal</h2>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-navy/98 backdrop-blur-2xl animate-in fade-in duration-500">
+          <div className="max-w-md w-full bg-navy-light border border-teal/30 rounded-[48px] p-16 relative overflow-hidden shadow-2xl">
+            <button onClick={() => setShowLoginModal(false)} className="absolute top-12 right-12 text-sand/40 hover:text-teal transition-colors cursor-pointer"><X size={28} /></button>
+            <div className="text-center mb-12">
+              <div className="w-20 h-20 bg-teal/10 text-teal rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner"><Lock size={36} /></div>
+              <h2 className="text-3xl font-serif italic text-white mb-3 uppercase tracking-tighter">Staff Portal</h2>
+              <p className="text-[10px] uppercase tracking-widest text-teal/60 font-bold">Authorized Access Only</p>
             </div>
-            <form onSubmit={handleLogin} className="space-y-6">
-              <input type="text" required value={emailInput} onChange={(e) => { setEmailInput(e.target.value); if (loginError) setLoginError(''); }} placeholder="Staff Email or ID" className={`w-full bg-navy border ${loginError ? 'border-red-400' : 'border-teal/20'} px-6 py-4 rounded-2xl outline-none text-sand placeholder-sand/20`} />
-              {loginError && <p className="text-red-400 text-[10px] italic">{loginError}</p>}
-              <button type="submit" className="w-full bg-teal text-navy py-4 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-sand transition-all cursor-pointer">Enter Dashboard</button>
+            <form onSubmit={handleLogin} className="space-y-8">
+              <input type="text" required value={emailInput} onChange={(e) => { setEmailInput(e.target.value); if (loginError) setLoginError(''); }} placeholder="Staff ID or Email" className={`w-full bg-navy border ${loginError ? 'border-red-500/50' : 'border-teal/20'} px-8 py-5 rounded-2xl outline-none text-sand placeholder-sand/20 text-sm`} />
+              {loginError && <p className="text-red-400 text-[10px] italic text-center font-bold tracking-widest uppercase">{loginError}</p>}
+              <button type="submit" className="w-full bg-teal text-navy py-5 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-sand transition-all transform active:scale-95 cursor-pointer shadow-lg">Authenticate</button>
             </form>
           </div>
         </div>
       )}
-      <div className={`fixed right-0 top-0 h-screen z-[60] transition-transform duration-500 ease-in-out ${isDashboardOpen ? 'translate-x-0' : 'translate-x-full shadow-none'}`}>
-        <div className="w-[420px] h-full bg-navy shadow-2xl border-l border-teal/30 flex flex-col text-sand relative">
-          <button onClick={() => setIsDashboardOpen(false)} className="absolute left-[-40px] top-6 bg-navy text-sand p-2 rounded-l-lg border-y border-l border-teal/30 cursor-pointer hover:text-teal transition-colors"><ChevronRight size={24} /></button>
+      <div className={`fixed right-0 top-0 h-screen z-[60] transition-transform duration-700 ease-in-out ${isDashboardOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className="w-[450px] h-full bg-navy shadow-[0_0_100px_rgba(0,0,0,0.8)] border-l border-teal/20 flex flex-col text-sand relative">
+          <button onClick={() => setIsDashboardOpen(false)} className="absolute left-[-48px] top-8 bg-navy text-teal p-3 rounded-l-2xl border-y border-l border-teal/20 cursor-pointer hover:bg-navy-light transition-all shadow-xl"><ChevronRight size={24} /></button>
           
-          <div className="p-6 border-b border-teal/30 bg-navy-light">
-            <div className="flex justify-between items-center mb-6">
+          <div className="p-8 border-b border-teal/10 bg-navy-light/50">
+            <div className="flex justify-between items-center mb-10">
               <div>
-                <h3 className="text-xl font-bold font-serif text-teal tracking-wider uppercase italic">CMS Dashboard</h3>
-                <div className="flex items-center gap-2 mt-1"><UserCheck size={10} className="text-teal" /><span className="text-[9px] font-bold opacity-40 truncate max-w-[150px]">{userEmail}</span></div>
+                <h3 className="text-2xl font-serif italic text-teal tracking-tighter uppercase">Studio</h3>
+                <div className="flex items-center gap-3 mt-2"><div className="w-2 h-2 rounded-full bg-teal animate-pulse"></div><span className="text-[9px] font-bold opacity-50 uppercase tracking-widest">{userEmail}</span></div>
               </div>
-              <button onClick={() => { logout(); setIsDashboardOpen(false); }} className="p-2 text-sand/40 hover:text-red-400 transition-colors cursor-pointer" title="Sign Out"><LogOut size={18} /></button>
+              <button onClick={() => { logout(); setIsDashboardOpen(false); }} className="p-3 text-sand/30 hover:text-red-400 transition-colors cursor-pointer rounded-xl hover:bg-red-400/5" title="Logout"><LogOut size={20} /></button>
             </div>
-            <div className="flex gap-2">
-              {[{ id: 'general', icon: Layout, label: 'Global' }, { id: 'seo', icon: Globe, label: 'SEO' }, { id: 'blog', icon: PenTool, label: 'Blog' }, { id: 'menu', icon: Utensils, label: 'Menu' }].map(tab => (
-                <button key={tab.id} onClick={() => setActiveTab(tab.id as any)} className={`flex-1 flex flex-col items-center justify-center p-3 rounded-xl transition-all cursor-pointer ${activeTab === tab.id ? 'bg-teal text-navy' : 'bg-navy text-teal/60 hover:text-teal'}`}><tab.icon size={18} /><span className="text-[8px] mt-1 font-bold uppercase">{tab.label}</span></button>
+            <div className="grid grid-cols-5 gap-2">
+              {[
+                { id: 'general', icon: Layout, label: 'Core' }, 
+                { id: 'logo', icon: ImageIcon, label: 'Brand' }, 
+                { id: 'seo', icon: Globe, label: 'SEO' }, 
+                { id: 'blog', icon: PenTool, label: 'Blog' }, 
+                { id: 'menu', icon: Utensils, label: 'Menu' }
+              ].map(tab => (
+                <button 
+                  key={tab.id} 
+                  onClick={() => setActiveTab(tab.id as any)} 
+                  className={`flex flex-col items-center justify-center p-3 rounded-2xl transition-all cursor-pointer border ${activeTab === tab.id ? 'bg-teal border-teal text-navy shadow-lg shadow-teal/20' : 'bg-navy/50 border-teal/10 text-teal/60 hover:border-teal/30 hover:text-teal'}`}
+                >
+                  <tab.icon size={18} />
+                  <span className="text-[8px] mt-2 font-bold uppercase tracking-tighter">{tab.label}</span>
+                </button>
               ))}
             </div>
           </div>
 
-          <div className="flex-grow overflow-y-auto p-6 space-y-8 custom-scrollbar">
+          <div className="flex-grow overflow-y-auto p-10 space-y-12 custom-scrollbar">
             {activeTab === 'general' && (
-              <div className="space-y-6 animate-in slide-in-from-right duration-300">
-                <p className="text-[10px] font-bold text-teal uppercase tracking-[0.2em] mb-4">Restaurant Identity</p>
-                <div><label className="block text-[10px] font-bold uppercase opacity-50 mb-2">Name</label><input value={config.name} onChange={(e) => updateConfig({ name: e.target.value })} className="w-full bg-navy-light border border-teal/30 p-3 text-sm rounded-xl text-sand outline-none" /></div>
-                <div><label className="block text-[10px] font-bold uppercase opacity-50 mb-2">Tagline</label><input value={config.tagline} onChange={(e) => updateConfig({ tagline: e.target.value })} className="w-full bg-navy-light border border-teal/30 p-3 text-sm rounded-xl text-sand outline-none" /></div>
-                <div><label className="block text-[10px] font-bold uppercase opacity-50 mb-2">About Summary</label><textarea value={config.aboutText} onChange={(e) => updateConfig({ aboutText: e.target.value })} className="w-full bg-navy-light border border-teal/30 p-3 text-sm rounded-xl h-32 text-sand outline-none resize-none" /></div>
-                <div><label className="block text-[10px] font-bold uppercase opacity-50 mb-2">Address</label><input value={config.address} onChange={(e) => updateConfig({ address: e.target.value })} className="w-full bg-navy-light border border-teal/30 p-3 text-sm rounded-xl text-sand outline-none" /></div>
+              <div className="space-y-10 animate-in slide-in-from-bottom duration-500">
+                <div className="flex items-center gap-4 border-b border-teal/10 pb-4">
+                  <Layout size={20} className="text-teal" />
+                  <h4 className="text-xs uppercase tracking-[0.3em] font-bold text-teal opacity-70">General Information</h4>
+                </div>
+                <div className="space-y-8">
+                  <div><label className="block text-[10px] font-bold uppercase opacity-40 mb-3 tracking-widest">Site Name</label><input value={config.name} onChange={(e) => updateConfig({ name: e.target.value })} className="w-full bg-navy-light border border-teal/20 p-4 text-sm rounded-2xl text-sand outline-none focus:border-teal focus:ring-1 focus:ring-teal/20" /></div>
+                  <div><label className="block text-[10px] font-bold uppercase opacity-40 mb-3 tracking-widest">Tagline</label><input value={config.tagline} onChange={(e) => updateConfig({ tagline: e.target.value })} className="w-full bg-navy-light border border-teal/20 p-4 text-sm rounded-2xl text-sand outline-none focus:border-teal focus:ring-1 focus:ring-teal/20" /></div>
+                  <div><label className="block text-[10px] font-bold uppercase opacity-40 mb-3 tracking-widest">About Summary</label><textarea value={config.aboutText} onChange={(e) => updateConfig({ aboutText: e.target.value })} className="w-full bg-navy-light border border-teal/20 p-4 text-sm rounded-2xl h-40 text-sand outline-none resize-none focus:border-teal focus:ring-1 focus:ring-teal/20" /></div>
+                  <div><label className="block text-[10px] font-bold uppercase opacity-40 mb-3 tracking-widest">Address</label><input value={config.address} onChange={(e) => updateConfig({ address: e.target.value })} className="w-full bg-navy-light border border-teal/20 p-4 text-sm rounded-2xl text-sand outline-none focus:border-teal focus:ring-1 focus:ring-teal/20" /></div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'logo' && (
+              <div className="space-y-12 animate-in slide-in-from-bottom duration-500">
+                <div className="flex items-center gap-4 border-b border-teal/10 pb-4">
+                  <ImageIcon size={20} className="text-teal" />
+                  <h4 className="text-xs uppercase tracking-[0.3em] font-bold text-teal opacity-70">Logo & Identity</h4>
+                </div>
+                
+                <div className="space-y-8">
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase opacity-40 mb-3 tracking-widest">Logo Resource URL</label>
+                    <input 
+                      value={config.logoUrl} 
+                      onChange={(e) => updateConfig({ logoUrl: e.target.value })} 
+                      className="w-full bg-navy-light border border-teal/20 p-4 text-sm rounded-2xl text-sand outline-none mb-6 focus:border-teal focus:ring-1 focus:ring-teal/20" 
+                      placeholder="https://..." 
+                    />
+                    <div className="w-full aspect-video bg-navy-light flex items-center justify-center rounded-[32px] border border-teal/10 overflow-hidden relative group">
+                      {config.logoUrl ? (
+                        <img src={config.logoUrl} alt="Logo Preview" className="max-h-[80%] object-contain rounded-full shadow-2xl" />
+                      ) : (
+                        <div className="text-center p-8">
+                          <ImageIcon size={40} className="mx-auto mb-4 opacity-10" />
+                          <span className="text-[10px] opacity-20 uppercase tracking-widest font-bold">No Resource Link</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-3">
+                      <label className="block text-[10px] font-bold uppercase opacity-40 tracking-widest">Header Logo</label>
+                      <button 
+                        onClick={() => updateConfig({ showLogoHeader: !config.showLogoHeader })} 
+                        className={`w-full flex items-center justify-between p-4 rounded-2xl border transition-all cursor-pointer ${config.showLogoHeader ? 'border-teal bg-teal/10 text-teal shadow-inner' : 'border-teal/20 text-sand/30 hover:border-teal/40'}`}
+                      >
+                        <span className="text-[10px] font-bold tracking-widest">{config.showLogoHeader ? 'ENABLED' : 'DISABLED'}</span>
+                        {config.showLogoHeader ? <Eye size={18} /> : <EyeOff size={18} />}
+                      </button>
+                    </div>
+                    <div className="space-y-3">
+                      <label className="block text-[10px] font-bold uppercase opacity-40 tracking-widest">Footer Logo</label>
+                      <button 
+                        onClick={() => updateConfig({ showLogoFooter: !config.showLogoFooter })} 
+                        className={`w-full flex items-center justify-between p-4 rounded-2xl border transition-all cursor-pointer ${config.showLogoFooter ? 'border-teal bg-teal/10 text-teal shadow-inner' : 'border-teal/20 text-sand/30 hover:border-teal/40'}`}
+                      >
+                        <span className="text-[10px] font-bold tracking-widest">{config.showLogoFooter ? 'ENABLED' : 'DISABLED'}</span>
+                        {config.showLogoFooter ? <Eye size={18} /> : <EyeOff size={18} />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-8">
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <label className="block text-[10px] font-bold uppercase opacity-40 tracking-widest">Header Height</label>
+                        <span className="text-[10px] font-bold text-teal">{config.logoHeight}px</span>
+                      </div>
+                      <input type="range" min="30" max="200" value={config.logoHeight} onChange={(e) => updateConfig({ logoHeight: parseInt(e.target.value) })} className="w-full h-1 bg-navy-light rounded-lg appearance-none cursor-pointer accent-teal border border-teal/10" />
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <label className="block text-[10px] font-bold uppercase opacity-40 tracking-widest">Footer Height</label>
+                        <span className="text-[10px] font-bold text-teal">{config.logoHeightFooter}px</span>
+                      </div>
+                      <input type="range" min="30" max="200" value={config.logoHeightFooter} onChange={(e) => updateConfig({ logoHeightFooter: parseInt(e.target.value) })} className="w-full h-1 bg-navy-light rounded-lg appearance-none cursor-pointer accent-teal border border-teal/10" />
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <label className="block text-[10px] font-bold uppercase opacity-40 tracking-widest">Outer Padding</label>
+                        <span className="text-[10px] font-bold text-teal">{config.logoPadding}px</span>
+                      </div>
+                      <input type="range" min="0" max="80" value={config.logoPadding} onChange={(e) => updateConfig({ logoPadding: parseInt(e.target.value) })} className="w-full h-1 bg-navy-light rounded-lg appearance-none cursor-pointer accent-teal border border-teal/10" />
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
 
             {activeTab === 'seo' && (
-              <div className="space-y-6 animate-in slide-in-from-right duration-300">
-                <p className="text-[10px] font-bold text-teal uppercase tracking-[0.2em] mb-4">SEO Config: {location.pathname}</p>
-                <div><label className="block text-[10px] font-bold uppercase opacity-50 mb-2">Meta Title</label><input value={currentSEO.title} onChange={(e) => updateSEO(location.pathname, { ...currentSEO, title: e.target.value })} className="w-full bg-navy-light border border-teal/30 p-3 text-sm rounded-xl text-sand outline-none" /></div>
-                <div><label className="block text-[10px] font-bold uppercase opacity-50 mb-2">Meta Description</label><textarea value={currentSEO.description} onChange={(e) => updateSEO(location.pathname, { ...currentSEO, description: e.target.value })} className="w-full bg-navy-light border border-teal/30 p-3 text-sm rounded-xl h-32 text-sand outline-none resize-none" /></div>
+              <div className="space-y-10 animate-in slide-in-from-bottom duration-500">
+                <div className="flex items-center gap-4 border-b border-teal/10 pb-4">
+                  <Globe size={20} className="text-teal" />
+                  <h4 className="text-xs uppercase tracking-[0.3em] font-bold text-teal opacity-70">Optimization: {location.pathname}</h4>
+                </div>
+                <div className="space-y-8">
+                  <div><label className="block text-[10px] font-bold uppercase opacity-40 mb-3 tracking-widest">Meta Title</label><input value={currentSEO.title} onChange={(e) => updateSEO(location.pathname, { ...currentSEO, title: e.target.value })} className="w-full bg-navy-light border border-teal/20 p-4 text-sm rounded-2xl text-sand outline-none focus:border-teal" /></div>
+                  <div><label className="block text-[10px] font-bold uppercase opacity-40 mb-3 tracking-widest">Meta Description</label><textarea value={currentSEO.description} onChange={(e) => updateSEO(location.pathname, { ...currentSEO, description: e.target.value })} className="w-full bg-navy-light border border-teal/20 p-4 text-sm rounded-2xl h-40 text-sand outline-none resize-none focus:border-teal" /></div>
+                </div>
               </div>
             )}
 
             {activeTab === 'blog' && (
-              <div className="space-y-6 animate-in slide-in-from-right duration-300">
+              <div className="space-y-10 animate-in slide-in-from-bottom duration-500">
                 <button onClick={() => addPost({
                   id: Date.now().toString(),
                   title: 'New Dispatch',
@@ -303,25 +456,27 @@ const ThemePanel = () => {
                   date: new Date().toLocaleDateString(),
                   category: 'News',
                   image: 'https://images.unsplash.com/photo-1551632432-c735e8299bc2?auto=format&fit=crop&q=80&w=800'
-                })} className="w-full bg-teal text-navy py-4 rounded-xl font-bold uppercase tracking-widest text-xs cursor-pointer flex items-center justify-center gap-2"><Plus size={16} /> New Post</button>
-                {posts.map(post => (
-                  <div key={post.id} className="p-4 bg-navy-light rounded-2xl border border-teal/10 group">
-                    <div className="flex justify-between items-start mb-3">
-                      <input value={post.title} onChange={(e) => updatePost(post.id, { title: e.target.value })} className="flex-grow bg-transparent border-none p-0 font-bold text-white focus:ring-0 outline-none" />
-                      <button onClick={() => deletePost(post.id)} className="text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"><Trash2 size={16} /></button>
+                })} className="w-full bg-teal text-navy py-5 rounded-2xl font-bold uppercase tracking-widest text-xs cursor-pointer flex items-center justify-center gap-3 shadow-lg active:scale-95 transition-all"><Plus size={18} /> Add New Entry</button>
+                <div className="space-y-4">
+                  {posts.map(post => (
+                    <div key={post.id} className="p-6 bg-navy-light rounded-3xl border border-teal/10 group hover:border-teal/30 transition-all">
+                      <div className="flex justify-between items-start mb-6">
+                        <input value={post.title} onChange={(e) => updatePost(post.id, { title: e.target.value })} className="flex-grow bg-transparent border-none p-0 font-serif italic text-lg text-white focus:ring-0 outline-none" />
+                        <button onClick={() => deletePost(post.id)} className="text-red-400 opacity-0 group-hover:opacity-100 transition-opacity p-2 hover:bg-red-400/10 rounded-lg"><Trash2 size={16} /></button>
+                      </div>
+                      <textarea value={post.excerpt} onChange={(e) => updatePost(post.id, { excerpt: e.target.value })} className="w-full bg-navy/50 p-4 rounded-xl text-xs mb-4 border border-teal/5 outline-none h-28 resize-none font-lora italic opacity-60 focus:opacity-100" />
+                      <div className="grid grid-cols-2 gap-3">
+                         <input value={post.author} onChange={(e) => updatePost(post.id, { author: e.target.value })} className="bg-navy/50 p-3 rounded-xl text-[10px] border border-teal/5 outline-none focus:border-teal/30" placeholder="Author" />
+                         <input value={post.image} onChange={(e) => updatePost(post.id, { image: e.target.value })} className="bg-navy/50 p-3 rounded-xl text-[10px] border border-teal/5 outline-none focus:border-teal/30" placeholder="Img URL" />
+                      </div>
                     </div>
-                    <textarea value={post.excerpt} onChange={(e) => updatePost(post.id, { excerpt: e.target.value })} className="w-full bg-navy p-2 rounded-lg text-[10px] mb-2 border border-teal/10 outline-none h-20 resize-none" placeholder="Excerpt..." />
-                    <div className="flex gap-2">
-                       <input value={post.author} onChange={(e) => updatePost(post.id, { author: e.target.value })} className="flex-1 bg-navy p-2 rounded-lg text-[10px] border border-teal/10 outline-none" placeholder="Author..." />
-                       <input value={post.image} onChange={(e) => updatePost(post.id, { image: e.target.value })} className="flex-1 bg-navy p-2 rounded-lg text-[10px] border border-teal/10 outline-none" placeholder="Image URL..." />
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             )}
 
             {activeTab === 'menu' && (
-              <div className="space-y-6 animate-in slide-in-from-right duration-300">
+              <div className="space-y-10 animate-in slide-in-from-bottom duration-500">
                 <button onClick={() => addItem({
                   id: Date.now().toString(),
                   name: 'Signature Dish',
@@ -329,23 +484,25 @@ const ThemePanel = () => {
                   price: '$30',
                   category: 'Mains',
                   image: 'https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=400'
-                })} className="w-full bg-teal text-navy py-4 rounded-xl font-bold uppercase tracking-widest text-xs cursor-pointer flex items-center justify-center gap-2"><Plus size={16} /> New Item</button>
-                {menu.map(item => (
-                  <div key={item.id} className="p-4 bg-navy-light rounded-2xl border border-teal/10 group">
-                    <div className="flex justify-between items-start mb-3">
-                      <input value={item.name} onChange={(e) => updateItem(item.id, { name: e.target.value })} className="flex-grow bg-transparent border-none p-0 font-bold text-white focus:ring-0 outline-none" />
-                      <button onClick={() => deleteItem(item.id)} className="text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"><Trash2 size={16} /></button>
+                })} className="w-full bg-teal text-navy py-5 rounded-2xl font-bold uppercase tracking-widest text-xs cursor-pointer flex items-center justify-center gap-3 shadow-lg active:scale-95 transition-all"><Plus size={18} /> Add Menu Item</button>
+                <div className="space-y-4">
+                  {menu.map(item => (
+                    <div key={item.id} className="p-6 bg-navy-light rounded-3xl border border-teal/10 group hover:border-teal/30 transition-all">
+                      <div className="flex justify-between items-start mb-6">
+                        <input value={item.name} onChange={(e) => updateItem(item.id, { name: e.target.value })} className="flex-grow bg-transparent border-none p-0 font-serif italic text-lg text-white focus:ring-0 outline-none" />
+                        <button onClick={() => deleteItem(item.id)} className="text-red-400 opacity-0 group-hover:opacity-100 transition-opacity p-2 hover:bg-red-400/10 rounded-lg"><Trash2 size={16} /></button>
+                      </div>
+                      <textarea value={item.description} onChange={(e) => updateItem(item.id, { description: e.target.value })} className="w-full bg-navy/50 p-4 rounded-xl text-xs mb-6 border border-teal/5 outline-none h-24 resize-none font-lora italic opacity-60 focus:opacity-100" />
+                      <div className="grid grid-cols-2 gap-3 mb-3">
+                        <input value={item.price} onChange={(e) => updateItem(item.id, { price: e.target.value })} className="bg-navy/50 p-3 rounded-xl text-[10px] border border-teal/5 outline-none focus:border-teal/30 font-bold" />
+                        <select value={item.category} onChange={(e) => updateItem(item.id, { category: e.target.value as any })} className="bg-navy/50 p-3 rounded-xl text-[10px] border border-teal/5 text-teal/80 outline-none appearance-none focus:border-teal/30">
+                          <option>Starters</option><option>Mains</option><option>Sides</option><option>Desserts</option><option>Drinks</option>
+                        </select>
+                      </div>
+                      <input value={item.image} onChange={(e) => updateItem(item.id, { image: e.target.value })} className="w-full bg-navy/50 p-3 rounded-xl text-[10px] border border-teal/5 outline-none focus:border-teal/30" placeholder="Image Resource Link" />
                     </div>
-                    <textarea value={item.description} onChange={(e) => updateItem(item.id, { description: e.target.value })} className="w-full bg-navy p-2 rounded-lg text-[10px] mb-3 border border-teal/10 outline-none h-16 resize-none" placeholder="Description..." />
-                    <div className="flex gap-2 mb-2">
-                      <input value={item.price} onChange={(e) => updateItem(item.id, { price: e.target.value })} className="w-20 bg-navy p-2 rounded-lg text-[10px] border border-teal/10 outline-none" placeholder="Price..." />
-                      <select value={item.category} onChange={(e) => updateItem(item.id, { category: e.target.value as any })} className="flex-grow bg-navy p-2 rounded-lg text-[10px] border border-teal/10 text-white/50">
-                        <option>Starters</option><option>Mains</option><option>Sides</option><option>Desserts</option><option>Drinks</option>
-                      </select>
-                    </div>
-                    <input value={item.image} onChange={(e) => updateItem(item.id, { image: e.target.value })} className="w-full bg-navy p-2 rounded-lg text-[10px] border border-teal/10 outline-none" placeholder="Image URL..." />
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             )}
           </div>

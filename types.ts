@@ -35,6 +35,13 @@ export interface SiteConfig {
   aboutText: string;
   aboutImage: string;
   operatingHours: string[];
+  // Logo Configuration
+  logoUrl: string;
+  logoHeight: number;
+  logoHeightFooter: number;
+  logoPadding: number;
+  showLogoHeader: boolean;
+  showLogoFooter: boolean;
 }
 
 export interface SEOData {

@@ -19,7 +19,7 @@ const Reservations: React.FC = () => {
           <div className="w-20 h-20 bg-teal/20 text-teal rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_20px_rgba(27,160,152,0.3)]">
             <Calendar size={40} />
           </div>
-          <h2 className="text-3xl font-bold mb-4 font-serif text-white uppercase italic">Booking Received!</h2>
+          <h2 className="text-3xl font-normal mb-4 font-bodoni text-white uppercase italic">Booking Received!</h2>
           <p className="text-sand opacity-70 mb-8">We've received your request and will confirm your table shortly via email.</p>
           <button 
             onClick={() => setSubmitted(false)}
@@ -38,7 +38,7 @@ const Reservations: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
           {/* Form */}
           <div className="bg-navy p-8 md:p-12 rounded-3xl shadow-xl border border-teal/30">
-            <h1 className="text-4xl font-bold mb-8 font-serif uppercase tracking-tight text-sand">Reserve a Table</h1>
+            <h1 className="text-4xl font-normal mb-8 font-bodoni uppercase tracking-tight text-sand italic">Reserve a Table</h1>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -92,15 +92,15 @@ const Reservations: React.FC = () => {
 
           {/* Info */}
           <div className="lg:pt-12">
-            <h2 className="text-3xl font-bold mb-8 font-serif text-white italic">Policies</h2>
+            <h2 className="text-4xl font-normal mb-8 font-bodoni text-white uppercase italic">Policies</h2>
             <div className="space-y-10">
               <div className="flex items-start">
                 <div className="p-3 bg-navy-light text-teal rounded-lg mr-6 border border-teal/30">
                   <Info size={24} />
                 </div>
                 <div>
-                  <h4 className="font-bold uppercase tracking-widest text-xs mb-2 text-sand opacity-50">Grace Period</h4>
-                  <p className="text-sand opacity-70 leading-relaxed italic">We hold tables for 15 minutes. Please call us if you're running late.</p>
+                  <h4 className="font-normal text-lg mb-2 text-teal font-bodoni italic">Grace Period</h4>
+                  <p className="text-sand opacity-70 leading-relaxed italic font-lora">We hold tables for 15 minutes. Please call us if you're running late.</p>
                 </div>
               </div>
               <div className="flex items-start">
@@ -108,8 +108,8 @@ const Reservations: React.FC = () => {
                   <Clock size={24} />
                 </div>
                 <div>
-                  <h4 className="font-bold uppercase tracking-widest text-xs mb-2 text-sand opacity-50">Dining Time</h4>
-                  <p className="text-sand opacity-70 leading-relaxed italic">All bookings are for 90 minutes. We strive to be efficient so everyone can enjoy their meal.</p>
+                  <h4 className="font-normal text-lg mb-2 text-teal font-bodoni italic">Dining Time</h4>
+                  <p className="text-sand opacity-70 leading-relaxed italic font-lora">All bookings are for 90 minutes. We strive to be efficient so everyone can enjoy their meal.</p>
                 </div>
               </div>
               <div className="flex items-start">
@@ -117,15 +117,15 @@ const Reservations: React.FC = () => {
                   <Users size={24} />
                 </div>
                 <div>
-                  <h4 className="font-bold uppercase tracking-widest text-xs mb-2 text-sand opacity-50">Large Groups</h4>
-                  <p className="text-sand opacity-70 leading-relaxed italic">For parties larger than 6, please email our events team at events@damerestaurant.com</p>
+                  <h4 className="font-normal text-lg mb-2 text-teal font-bodoni italic">Large Groups</h4>
+                  <p className="text-sand opacity-70 leading-relaxed italic font-lora">For parties larger than 6, please email our events team at events@damerestaurant.com</p>
                 </div>
               </div>
             </div>
 
             <div className="mt-16 p-8 bg-navy-light rounded-2xl text-sand border border-teal/30">
-              <h3 className="text-xl font-bold font-serif mb-4 text-teal">Want to skip the line?</h3>
-              <p className="text-sand opacity-60 text-sm mb-6 italic">A limited number of walk-in seats are available at our bar nightly starting at 5 PM.</p>
+              <h3 className="text-2xl font-normal mb-4 text-teal font-bodoni italic">Want to skip the line?</h3>
+              <p className="text-sand opacity-60 text-sm mb-6 italic font-lora">A limited number of walk-in seats are available at our bar nightly starting at 5 PM.</p>
               <Link to="/contact" className="text-teal font-bold uppercase tracking-widest text-xs flex items-center hover:opacity-80 transition-opacity">
                 View Location Map <ArrowRight size={14} className="ml-2" />
               </Link>

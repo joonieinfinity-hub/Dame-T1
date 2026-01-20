@@ -1,11 +1,21 @@
-import React, { useState, useMemo } from 'react';
+
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { useApp } from '../App';
-import { ChevronUp, ChevronDown, Leaf, Info } from 'lucide-react';
+import { ChevronUp, ChevronDown, Leaf, Info, ChevronLeft, ChevronRight, Camera } from 'lucide-react';
 
 const MenuPage: React.FC = () => {
   const { menu } = useApp();
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | 'none'>('none');
+  
+  // Carousel State
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  // Featured items for the carousel (items with images)
+  const featuredItems = useMemo(() => {
+    return menu.filter(item => item.image && item.image.length > 0).slice(0, 6);
+  }, [menu]);
 
   const categories = ['All', 'Starters', 'Mains', 'Sides', 'Desserts', 'Drinks'];
 
@@ -35,8 +45,110 @@ const MenuPage: React.FC = () => {
     else setSortOrder('none');
   };
 
+  // Carousel Navigation
+  const nextSlide = useCallback(() => {
+    if (isAnimating || featuredItems.length <= 1) return;
+    setIsAnimating(true);
+    setCurrentSlide((prev) => (prev + 1) % featuredItems.length);
+    setTimeout(() => setIsAnimating(false), 800);
+  }, [isAnimating, featuredItems.length]);
+
+  const prevSlide = useCallback(() => {
+    if (isAnimating || featuredItems.length <= 1) return;
+    setIsAnimating(true);
+    setCurrentSlide((prev) => (prev - 1 + featuredItems.length) % featuredItems.length);
+    setTimeout(() => setIsAnimating(false), 800);
+  }, [isAnimating, featuredItems.length]);
+
+  // Auto-play
+  useEffect(() => {
+    const timer = setInterval(nextSlide, 6000);
+    return () => clearInterval(timer);
+  }, [nextSlide]);
+
   return (
     <div className="animate-in fade-in duration-700 min-h-screen bg-navy text-sand">
+      {/* Featured Dishes Carousel Section */}
+      {featuredItems.length > 0 && (
+        <section className="relative h-[60vh] md:h-[70vh] w-full overflow-hidden bg-navy-light group">
+          <div className="absolute inset-0 z-0">
+            {featuredItems.map((item, idx) => (
+              <div
+                key={item.id}
+                className={`absolute inset-0 transition-all duration-1000 ease-in-out transform ${
+                  idx === currentSlide 
+                    ? 'opacity-100 scale-100 translate-x-0' 
+                    : 'opacity-0 scale-110'
+                }`}
+              >
+                <div className="absolute inset-0 bg-gradient-to-b from-navy/60 via-transparent to-navy z-10" />
+                <img 
+                  src={item.image} 
+                  alt={item.name} 
+                  className="w-full h-full object-cover grayscale-[0.2] contrast-[1.1]"
+                />
+                
+                {/* Content Overlay */}
+                <div className="absolute inset-0 z-20 flex flex-col items-center justify-end pb-24 px-4 text-center">
+                  <div className={`transition-all duration-700 delay-300 transform ${
+                    idx === currentSlide ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+                  }`}>
+                    <span className="text-teal text-[10px] uppercase tracking-[0.4em] font-bold mb-3 block">Featured Presentation</span>
+                    <h2 className="text-4xl md:text-6xl font-normal font-serif italic text-white mb-4 drop-shadow-2xl">{item.name}</h2>
+                    <p className="text-sand/70 max-w-xl mx-auto italic font-lora text-sm md:text-base mb-2">{item.description}</p>
+                    <span className="text-teal font-bold text-xl">{item.price}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Carousel Controls */}
+          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 z-30 flex justify-between px-4 md:px-12 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <button 
+              onClick={prevSlide}
+              className="pointer-events-auto p-4 rounded-full bg-black/20 backdrop-blur-md border border-white/10 text-sand hover:bg-teal hover:text-navy transition-all transform hover:scale-110 active:scale-90"
+              aria-label="Previous featured dish"
+            >
+              <ChevronLeft size={24} />
+            </button>
+            <button 
+              onClick={nextSlide}
+              className="pointer-events-auto p-4 rounded-full bg-black/20 backdrop-blur-md border border-white/10 text-sand hover:bg-teal hover:text-navy transition-all transform hover:scale-110 active:scale-90"
+              aria-label="Next featured dish"
+            >
+              <ChevronRight size={24} />
+            </button>
+          </div>
+
+          {/* Carousel Indicators */}
+          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-30 flex gap-3">
+            {featuredItems.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => {
+                  if (!isAnimating) {
+                    setIsAnimating(true);
+                    setCurrentSlide(idx);
+                    setTimeout(() => setIsAnimating(false), 800);
+                  }
+                }}
+                className={`h-1 transition-all duration-500 rounded-full ${
+                  idx === currentSlide ? 'w-12 bg-teal shadow-[0_0_10px_#1ba098]' : 'w-4 bg-white/20 hover:bg-white/40'
+                }`}
+                aria-label={`Go to slide ${idx + 1}`}
+              />
+            ))}
+          </div>
+
+          {/* Subtle Label */}
+          <div className="absolute top-10 right-10 z-30 hidden md:flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] font-bold text-white/40 border border-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
+            <Camera size={14} className="text-teal" />
+            <span>Seasonal Gallery</span>
+          </div>
+        </section>
+      )}
+
       <section className="py-20 border-b border-teal/20">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h1 className="text-5xl md:text-7xl font-bold mb-8 font-lora uppercase tracking-tighter text-teal drop-shadow-[0_0_15px_rgba(27,160,152,0.4)]">The Menu</h1>

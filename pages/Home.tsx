@@ -142,7 +142,8 @@ const Home: React.FC = () => {
                 key={i} 
                 className="inline-block animate-writing opacity-0"
                 style={{ 
-                  animationDelay: `${100 + (i * 180)}ms`,
+                  /* Slightly slower stagger delay (300ms) for a more refined feel */
+                  animationDelay: `${400 + (i * 300)}ms`,
                   animationFillMode: 'both'
                 }}
               >
@@ -150,19 +151,19 @@ const Home: React.FC = () => {
               </span>
             ))}
           </h1>
-          <p className="text-xl md:text-2xl text-teal mb-10 font-light tracking-[0.1em] italic animate-in slide-in-from-bottom duration-1000 delay-[1200ms]">
+          <p className="text-xl md:text-2xl text-teal mb-10 font-light tracking-[0.1em] italic animate-in slide-in-from-bottom duration-1000 delay-[2200ms]">
             {config.tagline}
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-in slide-in-from-bottom duration-1000 delay-[1400ms]">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-in slide-in-from-bottom duration-1000 delay-[2500ms]">
             <Link 
               to="/menu" 
-              className="w-full sm:w-auto bg-sand text-navy px-10 py-4 rounded-full font-bold uppercase tracking-widest text-sm hover:bg-white hover:text-navy hover:shadow-[0_0_30px_rgba(222,185,146,0.6)] hover:scale-110 active:scale-95 transition-all duration-300 shadow-xl"
+              className="w-full sm:w-auto bg-sand text-navy px-10 py-4 rounded-full font-bold uppercase tracking-widest text-sm hover:bg-white hover:text-navy hover:shadow-[0_0_50px_rgba(222,185,146,0.5)] hover:scale-110 active:scale-95 transition-all duration-300 shadow-xl"
             >
               View Menu
             </Link>
             <Link 
               to="/reservations" 
-              className="w-full sm:w-auto border border-teal text-sand px-10 py-4 rounded-full font-bold uppercase tracking-widest text-sm hover:bg-teal hover:text-navy hover:shadow-[0_0_30px_rgba(27,160,152,0.6)] hover:scale-110 active:scale-95 transition-all duration-300 shadow-xl"
+              className="w-full sm:w-auto border border-teal text-sand px-10 py-4 rounded-full font-bold uppercase tracking-widest text-sm hover:bg-teal hover:text-navy hover:shadow-[0_0_50px_rgba(27,160,152,0.5)] hover:scale-110 active:scale-95 transition-all duration-300 shadow-xl"
             >
               Reservations
             </Link>

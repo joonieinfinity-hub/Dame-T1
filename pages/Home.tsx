@@ -15,8 +15,6 @@ const Home: React.FC = () => {
       });
     }, { threshold: 0.15 });
 
-    // We observe all .reveal elements. Including menu/config in deps ensures
-    // that when React re-renders these sections, we re-attach observers.
     const revealElements = document.querySelectorAll('.reveal');
     revealElements.forEach(el => observer.observe(el));
 
@@ -67,7 +65,7 @@ const Home: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div className="order-2 lg:order-1 reveal">
               <span className="text-teal text-xs font-bold uppercase tracking-widest mb-4 block">Our Story</span>
-              <h2 className="text-4xl md:text-5xl font-normal mb-8 leading-tight font-serif italic text-white">A Modern Take on British Seafood</h2>
+              <h2 className="text-4xl md:text-5xl font-normal mb-8 leading-tight font-lora italic text-white">A Modern Take on British Seafood</h2>
               <p className="text-lg text-sand opacity-80 leading-relaxed mb-8">
                 {config.aboutText}
               </p>
@@ -97,7 +95,7 @@ const Home: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 reveal">
             <span className="text-teal opacity-70 text-xs font-bold uppercase tracking-widest mb-4 block">On The Table</span>
-            <h2 className="text-4xl md:text-5xl font-normal text-white font-serif">Featured Dishes</h2>
+            <h2 className="text-4xl md:text-5xl font-normal text-white font-lora italic">Featured Dishes</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -108,10 +106,10 @@ const Home: React.FC = () => {
                 </div>
                 <div className="p-8">
                   <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-xl font-normal font-serif group-hover:text-teal group-hover:scale-105 origin-left transition-all duration-300 text-white">{item.name}</h3>
+                    <h3 className="text-xl font-normal font-lora group-hover:text-teal group-hover:scale-105 origin-left transition-all duration-300 text-white">{item.name}</h3>
                     <span className="text-teal font-bold">{item.price}</span>
                   </div>
-                  <p className="text-sand opacity-60 text-sm mb-6 leading-relaxed">{item.description}</p>
+                  <p className="text-sand opacity-60 text-sm mb-6 leading-relaxed font-lora italic">{item.description}</p>
                 </div>
               </div>
             ))}
@@ -132,7 +130,7 @@ const Home: React.FC = () => {
         <div className="max-w-4xl mx-auto px-4 text-center reveal">
           <Quote size={48} className="mx-auto mb-10 text-teal/20" />
           <div className="relative">
-            <p className="text-2xl md:text-3xl font-serif italic text-sand leading-relaxed mb-8">
+            <p className="text-2xl md:text-3xl font-lora italic text-sand leading-relaxed mb-8">
               "The grilled oysters were transformative. It's rare to find a place that balances such casual energy with world-class execution. A true gem."
             </p>
             <div className="flex items-center justify-center gap-1 mb-2">

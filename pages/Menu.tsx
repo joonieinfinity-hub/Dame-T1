@@ -39,7 +39,7 @@ const MenuPage: React.FC = () => {
     <div className="animate-in fade-in duration-700 min-h-screen bg-navy text-sand">
       <section className="py-20 border-b border-teal/20">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h1 className="text-5xl md:text-7xl font-bold mb-8 font-serif uppercase tracking-tighter text-teal drop-shadow-[0_0_15px_rgba(27,160,152,0.4)]">The Menu</h1>
+          <h1 className="text-5xl md:text-7xl font-bold mb-8 font-lora uppercase tracking-tighter text-teal drop-shadow-[0_0_15px_rgba(27,160,152,0.4)]">The Menu</h1>
           <p className="text-sand opacity-70 mb-12 italic text-lg max-w-2xl mx-auto">Sourced daily from the coast. Prepared with precision. Served with New York energy.</p>
           
           <div className="flex flex-wrap justify-center gap-4 md:gap-8 mb-8">
@@ -79,7 +79,7 @@ const MenuPage: React.FC = () => {
 
                 <div className="flex-grow flex flex-col">
                   <div className="flex items-baseline gap-2 mb-2">
-                    <h3 className="text-lg font-bold font-serif text-white group-hover:text-teal transition-colors duration-300 leading-snug">
+                    <h3 className="text-lg font-bold font-lora text-white group-hover:text-teal transition-colors duration-300 leading-snug">
                       {item.name}
                     </h3>
                     <div className="flex-grow border-b border-dotted border-teal/20 min-w-[20px] mb-1"></div>

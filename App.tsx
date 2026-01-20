@@ -91,6 +91,8 @@ const Header = () => {
     { name: 'About', path: '/about' },
     { name: 'Menu', path: '/menu' },
     { name: 'Reservations', path: '/reservations' },
+    { name: 'Shop', path: 'https://damenyc.square.site/', external: true },
+    { name: 'Gift Cards', path: 'https://squareup.com/gift/TKYVAB895NCRJ/order', external: true },
     { name: 'Blog', path: '/blog' },
     { name: 'Contact', path: '/contact' },
   ];
@@ -104,9 +106,15 @@ const Header = () => {
           </Link>
           <div className="hidden md:flex space-x-8">
             {navLinks.map((link) => (
-              <Link key={link.path} to={link.path} className={`text-xs font-bold tracking-widest uppercase font-lora hover:text-teal transition-all ${location.pathname === link.path ? 'text-teal border-b border-teal' : 'text-sand'}`}>
-                {link.name}
-              </Link>
+              link.external ? (
+                <a key={link.path} href={link.path} target="_blank" rel="noopener noreferrer" className="text-xs font-bold tracking-widest uppercase font-lora hover:text-teal transition-all text-sand">
+                  {link.name}
+                </a>
+              ) : (
+                <Link key={link.path} to={link.path} className={`text-xs font-bold tracking-widest uppercase font-lora hover:text-teal transition-all ${location.pathname === link.path ? 'text-teal border-b border-teal' : 'text-sand'}`}>
+                  {link.name}
+                </Link>
+              )
             ))}
           </div>
           <div className="hidden md:block">
@@ -123,9 +131,15 @@ const Header = () => {
         <div className="md:hidden bg-navy border-t border-teal/30 animate-in fade-in slide-in-from-top duration-300">
           <div className="px-4 pt-2 pb-6 space-y-1 sm:px-3">
             {navLinks.map((link) => (
-              <Link key={link.path} to={link.path} onClick={() => setIsOpen(false)} className="block px-3 py-4 text-base font-medium text-sand hover:text-teal border-b border-teal/10 font-lora">
-                {link.name}
-              </Link>
+              link.external ? (
+                <a key={link.path} href={link.path} target="_blank" rel="noopener noreferrer" onClick={() => setIsOpen(false)} className="block px-3 py-4 text-base font-medium text-sand hover:text-teal border-b border-teal/10 font-lora">
+                  {link.name}
+                </a>
+              ) : (
+                <Link key={link.path} to={link.path} onClick={() => setIsOpen(false)} className="block px-3 py-4 text-base font-medium text-sand hover:text-teal border-b border-teal/10 font-lora">
+                  {link.name}
+                </Link>
+              )
             ))}
             <div className="pt-6">
                <Link to="/reservations" onClick={() => setIsOpen(false)} className="block w-full text-center bg-teal text-navy px-6 py-4 rounded-xl text-sm font-bold uppercase tracking-widest font-lora shadow-lg">Make a Reservation</Link>

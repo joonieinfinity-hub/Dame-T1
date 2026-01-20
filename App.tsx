@@ -2,7 +2,7 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
 import { HashRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { 
   Menu as MenuIcon, X, Instagram, Facebook, Mail, MapPin, 
-  Phone, Settings, Search, Check, ChevronRight, ArrowRight,
+  Phone, Settings, Check, ChevronRight, ArrowRight,
   Plus, Trash2, Globe, Layout, Utensils, PenTool, ExternalLink,
   Lock, LogOut, UserCheck
 } from 'lucide-react';
@@ -91,8 +91,6 @@ const Header = () => {
     { name: 'About', path: '/about' },
     { name: 'Menu', path: '/menu' },
     { name: 'Reservations', path: '/reservations' },
-    { name: 'Shop', path: 'https://damenyc.square.site/', external: true },
-    { name: 'Gift Cards', path: 'https://squareup.com/gift/TKYVAB895NCRJ/order', external: true },
     { name: 'Blog', path: '/blog' },
     { name: 'Contact', path: '/contact' },
   ];
@@ -106,15 +104,9 @@ const Header = () => {
           </Link>
           <div className="hidden md:flex space-x-8">
             {navLinks.map((link) => (
-              link.external ? (
-                <a key={link.name} href={link.path} target="_blank" rel="noopener noreferrer" className="text-xs font-bold tracking-widest uppercase font-lora hover:text-[#1ba098] transition-all text-[#deb992] flex items-center gap-1">
-                  {link.name} <ExternalLink size={12} className="opacity-50" />
-                </a>
-              ) : (
-                <Link key={link.path} to={link.path} className={`text-xs font-bold tracking-widest uppercase font-lora hover:text-[#1ba098] transition-all ${location.pathname === link.path ? 'text-[#1ba098] border-b border-[#1ba098]' : 'text-[#deb992]'}`}>
-                  {link.name}
-                </Link>
-              )
+              <Link key={link.path} to={link.path} className={`text-xs font-bold tracking-widest uppercase font-lora hover:text-[#1ba098] transition-all ${location.pathname === link.path ? 'text-[#1ba098] border-b border-[#1ba098]' : 'text-[#deb992]'}`}>
+                {link.name}
+              </Link>
             ))}
           </div>
           <div className="hidden md:block">
@@ -131,15 +123,9 @@ const Header = () => {
         <div className="md:hidden bg-[#051622] border-t border-[#1ba098]/30 animate-in fade-in slide-in-from-top duration-300">
           <div className="px-4 pt-2 pb-6 space-y-1 sm:px-3">
             {navLinks.map((link) => (
-              link.external ? (
-                <a key={link.name} href={link.path} target="_blank" rel="noopener noreferrer" className="block px-3 py-4 text-base font-medium text-[#deb992] hover:text-[#1ba098] border-b border-[#1ba098]/10 font-lora flex items-center justify-between">
-                  {link.name} <ExternalLink size={16} />
-                </a>
-              ) : (
-                <Link key={link.path} to={link.path} onClick={() => setIsOpen(false)} className="block px-3 py-4 text-base font-medium text-[#deb992] hover:text-[#1ba098] border-b border-[#1ba098]/10 font-lora">
-                  {link.name}
-                </Link>
-              )
+              <Link key={link.path} to={link.path} onClick={() => setIsOpen(false)} className="block px-3 py-4 text-base font-medium text-[#deb992] hover:text-[#1ba098] border-b border-[#1ba098]/10 font-lora">
+                {link.name}
+              </Link>
             ))}
             <div className="pt-6">
                <Link to="/reservations" onClick={() => setIsOpen(false)} className="block w-full text-center bg-[#1ba098] text-[#051622] px-6 py-4 rounded-xl text-sm font-bold uppercase tracking-widest font-lora shadow-lg">Make a Reservation</Link>
@@ -214,18 +200,23 @@ const ThemePanel = () => {
   const [activeTab, setActiveTab] = useState<'general' | 'seo' | 'blog' | 'menu'>('general');
   const [emailInput, setEmailInput] = useState('');
   const [loginError, setLoginError] = useState('');
-  const { config, updateConfig, menu, addItem, updateItem, deleteItem, posts, addPost, updatePost, deletePost, seo, updateSEO, isAuthenticated, login, logout, userEmail, isDashboardOpen, setIsDashboardOpen, showLoginModal, setShowLoginModal } = useApp();
+  const { 
+    config, updateConfig, menu, addItem, updateItem, deleteItem, 
+    posts, addPost, updatePost, deletePost, seo, updateSEO, 
+    isAuthenticated, login, logout, userEmail, isDashboardOpen, setIsDashboardOpen, showLoginModal, setShowLoginModal 
+  } = useApp();
   const location = useLocation();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (emailInput.toLowerCase().includes('@damenewyork.com')) {
-      login(emailInput);
+    const email = emailInput.toLowerCase();
+    if (email.includes('@damenewyork.com') || email === 'admin') {
+      login(email === 'admin' ? 'admin@damenewyork.com' : email);
       setLoginError('');
       setShowLoginModal(false);
       setIsDashboardOpen(true);
     } else {
-      setLoginError('Access denied. Please use a @damenewyork.com email.');
+      setLoginError('Access denied. Staff email required.');
     }
   };
 
@@ -234,7 +225,7 @@ const ThemePanel = () => {
   return (
     <>
       {showLoginModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#051622]/90 backdrop-blur-xl animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#051622]/95 backdrop-blur-xl animate-in fade-in duration-300">
           <div className="max-w-md w-full bg-[#0a2130] border border-[#1ba098]/30 rounded-[40px] p-12 relative overflow-hidden shadow-2xl">
             <button onClick={() => setShowLoginModal(false)} className="absolute top-8 right-8 text-[#deb992]/50 hover:text-[#1ba098] transition-colors cursor-pointer"><X size={24} /></button>
             <div className="text-center mb-10">
@@ -242,41 +233,100 @@ const ThemePanel = () => {
               <h2 className="text-3xl font-serif italic text-white mb-2 uppercase tracking-tighter">Staff Portal</h2>
             </div>
             <form onSubmit={handleLogin} className="space-y-6">
-              <input type="email" required value={emailInput} onChange={(e) => { setEmailInput(e.target.value); if (loginError) setLoginError(''); }} placeholder="name@damenewyork.com" className={`w-full bg-[#051622] border ${loginError ? 'border-red-400' : 'border-[#1ba098]/20'} px-6 py-4 rounded-2xl outline-none text-[#deb992] placeholder-[#deb992]/20`} />
+              <input type="text" required value={emailInput} onChange={(e) => { setEmailInput(e.target.value); if (loginError) setLoginError(''); }} placeholder="Staff Email or ID" className={`w-full bg-[#051622] border ${loginError ? 'border-red-400' : 'border-[#1ba098]/20'} px-6 py-4 rounded-2xl outline-none text-[#deb992] placeholder-[#deb992]/20`} />
               {loginError && <p className="text-red-400 text-[10px] italic">{loginError}</p>}
-              <button type="submit" className="w-full bg-[#1ba098] text-[#051622] py-4 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-[#deb992] transition-all cursor-pointer">Verify & Enter</button>
+              <button type="submit" className="w-full bg-[#1ba098] text-[#051622] py-4 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-[#deb992] transition-all cursor-pointer">Enter Dashboard</button>
             </form>
           </div>
         </div>
       )}
       <div className={`fixed right-0 top-0 h-screen z-[60] transition-transform duration-500 ease-in-out ${isDashboardOpen ? 'translate-x-0' : 'translate-x-full shadow-none'}`}>
-        <div className="w-[400px] h-full bg-[#051622] shadow-2xl border-l border-[#1ba098]/30 flex flex-col text-[#deb992] relative">
+        <div className="w-[420px] h-full bg-[#051622] shadow-2xl border-l border-[#1ba098]/30 flex flex-col text-[#deb992] relative">
           <button onClick={() => setIsDashboardOpen(false)} className="absolute left-[-40px] top-6 bg-[#051622] text-[#deb992] p-2 rounded-l-lg border-y border-l border-[#1ba098]/30 cursor-pointer hover:text-[#1ba098] transition-colors"><ChevronRight size={24} /></button>
+          
           <div className="p-6 border-b border-[#1ba098]/30 bg-[#0a2130]">
             <div className="flex justify-between items-center mb-6">
               <div>
-                <h3 className="text-xl font-bold font-serif text-[#1ba098] tracking-wider uppercase italic">Dashboard</h3>
+                <h3 className="text-xl font-bold font-serif text-[#1ba098] tracking-wider uppercase italic">CMS Dashboard</h3>
                 <div className="flex items-center gap-2 mt-1"><UserCheck size={10} className="text-[#1ba098]" /><span className="text-[9px] font-bold opacity-40 truncate max-w-[150px]">{userEmail}</span></div>
               </div>
               <button onClick={() => { logout(); setIsDashboardOpen(false); }} className="p-2 text-[#deb992]/40 hover:text-red-400 transition-colors cursor-pointer" title="Sign Out"><LogOut size={18} /></button>
             </div>
             <div className="flex gap-2">
-              {[{ id: 'general', icon: Layout, label: 'Global' }, { id: 'seo', icon: Globe, label: 'SEO' }, { id: 'blog', icon: PenTool, label: 'Posts' }, { id: 'menu', icon: Utensils, label: 'Menu' }].map(tab => (
-                <button key={tab.id} onClick={() => setActiveTab(tab.id as any)} className={`flex-1 flex flex-col items-center justify-center p-2 rounded-xl transition-all cursor-pointer ${activeTab === tab.id ? 'bg-[#1ba098] text-[#051622]' : 'bg-[#051622] text-[#1ba098]/60 hover:text-[#1ba098]'}`}><tab.icon size={18} /><span className="text-[8px] mt-1 font-bold uppercase">{tab.label}</span></button>
+              {[{ id: 'general', icon: Layout, label: 'Global' }, { id: 'seo', icon: Globe, label: 'SEO' }, { id: 'blog', icon: PenTool, label: 'Blog' }, { id: 'menu', icon: Utensils, label: 'Menu' }].map(tab => (
+                <button key={tab.id} onClick={() => setActiveTab(tab.id as any)} className={`flex-1 flex flex-col items-center justify-center p-3 rounded-xl transition-all cursor-pointer ${activeTab === tab.id ? 'bg-[#1ba098] text-[#051622]' : 'bg-[#051622] text-[#1ba098]/60 hover:text-[#1ba098]'}`}><tab.icon size={18} /><span className="text-[8px] mt-1 font-bold uppercase">{tab.label}</span></button>
               ))}
             </div>
           </div>
-          <div className="flex-grow overflow-y-auto p-6 space-y-6 custom-scrollbar">
+
+          <div className="flex-grow overflow-y-auto p-6 space-y-8 custom-scrollbar">
             {activeTab === 'general' && (
-              <div className="space-y-6">
-                <div><label className="block text-[10px] font-bold uppercase opacity-50 mb-2">Restaurant Name</label><input value={config.name} onChange={(e) => updateConfig({ name: e.target.value })} className="w-full bg-[#0a2130] border border-[#1ba098]/30 p-3 text-sm rounded-xl text-[#deb992] outline-none" /></div>
+              <div className="space-y-6 animate-in slide-in-from-right duration-300">
+                <p className="text-[10px] font-bold text-[#1ba098] uppercase tracking-[0.2em] mb-4">Restaurant Identity</p>
+                <div><label className="block text-[10px] font-bold uppercase opacity-50 mb-2">Name</label><input value={config.name} onChange={(e) => updateConfig({ name: e.target.value })} className="w-full bg-[#0a2130] border border-[#1ba098]/30 p-3 text-sm rounded-xl text-[#deb992] outline-none" /></div>
+                <div><label className="block text-[10px] font-bold uppercase opacity-50 mb-2">Tagline</label><input value={config.tagline} onChange={(e) => updateConfig({ tagline: e.target.value })} className="w-full bg-[#0a2130] border border-[#1ba098]/30 p-3 text-sm rounded-xl text-[#deb992] outline-none" /></div>
+                <div><label className="block text-[10px] font-bold uppercase opacity-50 mb-2">About Summary</label><textarea value={config.aboutText} onChange={(e) => updateConfig({ aboutText: e.target.value })} className="w-full bg-[#0a2130] border border-[#1ba098]/30 p-3 text-sm rounded-xl h-32 text-[#deb992] outline-none resize-none" /></div>
                 <div><label className="block text-[10px] font-bold uppercase opacity-50 mb-2">Address</label><input value={config.address} onChange={(e) => updateConfig({ address: e.target.value })} className="w-full bg-[#0a2130] border border-[#1ba098]/30 p-3 text-sm rounded-xl text-[#deb992] outline-none" /></div>
               </div>
             )}
+
             {activeTab === 'seo' && (
-              <div className="space-y-6">
+              <div className="space-y-6 animate-in slide-in-from-right duration-300">
+                <p className="text-[10px] font-bold text-[#1ba098] uppercase tracking-[0.2em] mb-4">SEO Config: {location.pathname}</p>
                 <div><label className="block text-[10px] font-bold uppercase opacity-50 mb-2">Meta Title</label><input value={currentSEO.title} onChange={(e) => updateSEO(location.pathname, { ...currentSEO, title: e.target.value })} className="w-full bg-[#0a2130] border border-[#1ba098]/30 p-3 text-sm rounded-xl text-[#deb992] outline-none" /></div>
                 <div><label className="block text-[10px] font-bold uppercase opacity-50 mb-2">Meta Description</label><textarea value={currentSEO.description} onChange={(e) => updateSEO(location.pathname, { ...currentSEO, description: e.target.value })} className="w-full bg-[#0a2130] border border-[#1ba098]/30 p-3 text-sm rounded-xl h-32 text-[#deb992] outline-none resize-none" /></div>
+              </div>
+            )}
+
+            {activeTab === 'blog' && (
+              <div className="space-y-6 animate-in slide-in-from-right duration-300">
+                <button onClick={() => addPost({
+                  id: Date.now().toString(),
+                  title: 'New Dispatch',
+                  excerpt: 'Kitchen updates...',
+                  content: '',
+                  author: 'Dame Staff',
+                  date: new Date().toLocaleDateString(),
+                  category: 'News',
+                  image: 'https://images.unsplash.com/photo-1551632432-c735e8299bc2?auto=format&fit=crop&q=80&w=800'
+                })} className="w-full bg-[#1ba098] text-[#051622] py-4 rounded-xl font-bold uppercase tracking-widest text-xs cursor-pointer flex items-center justify-center gap-2"><Plus size={16} /> New Post</button>
+                {posts.map(post => (
+                  <div key={post.id} className="p-4 bg-[#0a2130] rounded-2xl border border-[#1ba098]/10 group">
+                    <div className="flex justify-between items-start mb-3">
+                      <input value={post.title} onChange={(e) => updatePost(post.id, { title: e.target.value })} className="flex-grow bg-transparent border-none p-0 font-bold text-white focus:ring-0" />
+                      <button onClick={() => deletePost(post.id)} className="text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"><Trash2 size={16} /></button>
+                    </div>
+                    <textarea value={post.excerpt} onChange={(e) => updatePost(post.id, { excerpt: e.target.value })} className="w-full bg-[#051622] p-2 rounded-lg text-[10px] mb-2 border border-[#1ba098]/10 outline-none" />
+                    <input value={post.image} onChange={(e) => updatePost(post.id, { image: e.target.value })} className="w-full bg-[#051622] p-1 rounded text-[8px] border border-[#1ba098]/10 outline-none" />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {activeTab === 'menu' && (
+              <div className="space-y-6 animate-in slide-in-from-right duration-300">
+                <button onClick={() => addItem({
+                  id: Date.now().toString(),
+                  name: 'Signature Dish',
+                  description: 'Chef\'s selection...',
+                  price: '$30',
+                  category: 'Mains',
+                  image: 'https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=400'
+                })} className="w-full bg-[#1ba098] text-[#051622] py-4 rounded-xl font-bold uppercase tracking-widest text-xs cursor-pointer flex items-center justify-center gap-2"><Plus size={16} /> New Item</button>
+                {menu.map(item => (
+                  <div key={item.id} className="p-4 bg-[#0a2130] rounded-2xl border border-[#1ba098]/10 group">
+                    <div className="flex justify-between items-start mb-3">
+                      <input value={item.name} onChange={(e) => updateItem(item.id, { name: e.target.value })} className="flex-grow bg-transparent border-none p-0 font-bold text-white focus:ring-0" />
+                      <button onClick={() => deleteItem(item.id)} className="text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"><Trash2 size={16} /></button>
+                    </div>
+                    <div className="flex gap-2">
+                      <input value={item.price} onChange={(e) => updateItem(item.id, { price: e.target.value })} className="w-16 bg-[#051622] p-1 rounded text-[10px] border border-[#1ba098]/10" />
+                      <select value={item.category} onChange={(e) => updateItem(item.id, { category: e.target.value as any })} className="flex-grow bg-[#051622] p-1 rounded text-[10px] border border-[#1ba098]/10 text-white/50">
+                        <option>Starters</option><option>Mains</option><option>Sides</option><option>Desserts</option><option>Drinks</option>
+                      </select>
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
           </div>
@@ -287,15 +337,27 @@ const ThemePanel = () => {
 };
 
 const App = () => {
-  const [config, setConfig] = useState<SiteConfig>(INITIAL_CONFIG);
-  const [menu, setMenu] = useState<MenuItem[]>(MENU_ITEMS);
-  const [posts, setPosts] = useState<BlogPost[]>(BLOG_POSTS);
-  const [seo, setSeo] = useState<Record<string, SEOData>>({});
+  // Persistence Loading
+  const loadInitial = <T,>(key: string, fallback: T): T => {
+    const saved = localStorage.getItem(key);
+    return saved ? JSON.parse(saved) : fallback;
+  };
+
+  const [config, setConfig] = useState<SiteConfig>(() => loadInitial('dame_config', INITIAL_CONFIG));
+  const [menu, setMenu] = useState<MenuItem[]>(() => loadInitial('dame_menu', MENU_ITEMS));
+  const [posts, setPosts] = useState<BlogPost[]>(() => loadInitial('dame_posts', BLOG_POSTS));
+  const [seo, setSeo] = useState<Record<string, SEOData>>(() => loadInitial('dame_seo', {}));
+  
   const [isAuthenticated, setIsAuthenticated] = useState(() => localStorage.getItem('dame_auth') === 'true');
   const [userEmail, setUserEmail] = useState<string | null>(() => localStorage.getItem('dame_user'));
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
+  // Sync to LocalStorage
+  useEffect(() => localStorage.setItem('dame_config', JSON.stringify(config)), [config]);
+  useEffect(() => localStorage.setItem('dame_menu', JSON.stringify(menu)), [menu]);
+  useEffect(() => localStorage.setItem('dame_posts', JSON.stringify(posts)), [posts]);
+  useEffect(() => localStorage.setItem('dame_seo', JSON.stringify(seo)), [seo]);
   useEffect(() => {
     localStorage.setItem('dame_auth', isAuthenticated.toString());
     if (userEmail) localStorage.setItem('dame_user', userEmail);

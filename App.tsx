@@ -293,7 +293,8 @@ const Footer = () => {
 
 const ThemePanel = () => {
   const [activeTab, setActiveTab] = useState<'general' | 'seo' | 'blog' | 'menu' | 'logo'>('general');
-  const [emailInput, setEmailInput] = useState('');
+  const [usernameInput, setUsernameInput] = useState('');
+  const [passwordInput, setPasswordInput] = useState('');
   const [loginError, setLoginError] = useState('');
   const { 
     config, updateConfig, menu, addItem, updateItem, deleteItem, 
@@ -304,14 +305,20 @@ const ThemePanel = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    const email = emailInput.toLowerCase();
-    if (email.includes('@damenewyork.com') || email === 'admin') {
-      login(email === 'admin' ? 'admin@damenewyork.com' : email);
+    const username = usernameInput;
+    const password = passwordInput;
+    
+    // Updated login validation with required credentials
+    if (username === 'Dame Staff' && password === 'DAMESTAFF@0012') {
+      login(username);
       setLoginError('');
+      setUsernameInput('');
+      setPasswordInput('');
       setShowLoginModal(false);
       setIsDashboardOpen(true);
     } else {
-      setLoginError('Staff credentials required.');
+      setLoginError('Invalid username or password.');
+      setPasswordInput('');
     }
   };
 
@@ -328,10 +335,31 @@ const ThemePanel = () => {
               <h2 className="text-3xl font-serif italic text-white mb-3 uppercase tracking-tighter">Staff Portal</h2>
               <p className="text-[10px] uppercase tracking-widest text-teal/60 font-bold">Authorized Access Only</p>
             </div>
-            <form onSubmit={handleLogin} className="space-y-8">
-              <input type="text" required value={emailInput} onChange={(e) => { setEmailInput(e.target.value); if (loginError) setLoginError(''); }} placeholder="Staff ID or Email" className={`w-full bg-navy border ${loginError ? 'border-red-500/50' : 'border-teal/20'} px-8 py-5 rounded-2xl outline-none text-sand placeholder-sand/20 text-sm`} />
+            <form onSubmit={handleLogin} className="space-y-6">
+              <div className="space-y-2">
+                <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-sand/40 ml-4">Username</label>
+                <input 
+                  type="text" 
+                  required 
+                  value={usernameInput} 
+                  onChange={(e) => { setUsernameInput(e.target.value); if (loginError) setLoginError(''); }} 
+                  placeholder="Dame Staff" 
+                  className={`w-full bg-navy border ${loginError ? 'border-red-500/50' : 'border-teal/20'} px-8 py-4 rounded-2xl outline-none text-sand placeholder-sand/10 text-sm`} 
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-sand/40 ml-4">Password</label>
+                <input 
+                  type="password" 
+                  required 
+                  value={passwordInput} 
+                  onChange={(e) => { setPasswordInput(e.target.value); if (loginError) setLoginError(''); }} 
+                  placeholder="••••••••" 
+                  className={`w-full bg-navy border ${loginError ? 'border-red-500/50' : 'border-teal/20'} px-8 py-4 rounded-2xl outline-none text-sand placeholder-sand/10 text-sm`} 
+                />
+              </div>
               {loginError && <p className="text-red-400 text-[10px] italic text-center font-bold tracking-widest uppercase">{loginError}</p>}
-              <button type="submit" className="w-full bg-teal text-navy py-5 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-sand transition-all transform active:scale-95 cursor-pointer shadow-lg">Authenticate</button>
+              <button type="submit" className="w-full bg-teal text-navy py-5 mt-4 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-sand transition-all transform active:scale-95 cursor-pointer shadow-lg">Authenticate</button>
             </form>
           </div>
         </div>

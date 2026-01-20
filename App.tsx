@@ -4,7 +4,7 @@ import {
   Menu as MenuIcon, X, Instagram, Facebook, Mail, MapPin, 
   Phone, Settings, Search, Check, ChevronRight, ArrowRight,
   Plus, Trash2, Globe, Layout, Utensils, PenTool, ExternalLink,
-  Lock, LogOut, UserCheck
+  Lock, LogOut, UserCheck, ChevronLeft
 } from 'lucide-react';
 import { INITIAL_CONFIG, MENU_ITEMS, BLOG_POSTS } from './constants';
 import { SiteConfig, MenuItem, BlogPost, SEOData } from './types';
@@ -289,7 +289,7 @@ const Footer = () => {
             <p>© {new Date().getFullYear()} {config.name}. Built with Precision.</p>
             <button 
               onClick={handleStaffToggle}
-              className="flex items-center gap-2 hover:text-[#1ba098] transition-colors group"
+              className="flex items-center gap-2 hover:text-[#1ba098] transition-colors group cursor-pointer"
             >
               {isAuthenticated ? <Settings size={12} className="group-hover:rotate-90 transition-transform" /> : <Lock size={12} />}
               Staff Portal
@@ -308,6 +308,7 @@ const Footer = () => {
 const ThemePanel = () => {
   const [activeTab, setActiveTab] = useState<'general' | 'seo' | 'blog' | 'menu'>('general');
   const [emailInput, setEmailInput] = useState('');
+  const [loginError, setLoginError] = useState('');
   
   const { 
     config, updateConfig, menu, addItem, updateItem, deleteItem, 
@@ -320,10 +321,13 @@ const ThemePanel = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (emailInput.includes('@')) {
+    if (emailInput.includes('@damenewyork.com')) {
       login(emailInput);
+      setLoginError('');
       setShowLoginModal(false);
       setIsDashboardOpen(true);
+    } else {
+      setLoginError('Access denied. Please use a @damenewyork.com email.');
     }
   };
 
@@ -337,7 +341,7 @@ const ThemePanel = () => {
           <div className="max-w-md w-full bg-[#0a2130] border border-[#1ba098]/30 rounded-[40px] p-12 relative overflow-hidden shadow-2xl">
             <button 
               onClick={() => setShowLoginModal(false)}
-              className="absolute top-8 right-8 text-[#deb992]/50 hover:text-[#1ba098] transition-colors"
+              className="absolute top-8 right-8 text-[#deb992]/50 hover:text-[#1ba098] transition-colors cursor-pointer"
             >
               <X size={24} />
             </button>
@@ -355,14 +359,18 @@ const ThemePanel = () => {
                   type="email"
                   required
                   value={emailInput}
-                  onChange={(e) => setEmailInput(e.target.value)}
+                  onChange={(e) => {
+                    setEmailInput(e.target.value);
+                    if (loginError) setLoginError('');
+                  }}
                   placeholder="name@damenewyork.com"
-                  className="w-full bg-[#051622] border border-[#1ba098]/20 px-6 py-4 rounded-2xl focus:ring-2 focus:ring-[#1ba098] outline-none text-[#deb992] placeholder-[#deb992]/20"
+                  className={`w-full bg-[#051622] border ${loginError ? 'border-red-400' : 'border-[#1ba098]/20'} px-6 py-4 rounded-2xl focus:ring-2 focus:ring-[#1ba098] outline-none text-[#deb992] placeholder-[#deb992]/20`}
                 />
+                {loginError && <p className="text-red-400 text-[10px] mt-2 italic">{loginError}</p>}
               </div>
               <button 
                 type="submit"
-                className="w-full bg-[#1ba098] text-[#051622] py-4 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-[#deb992] transition-all flex items-center justify-center gap-3"
+                className="w-full bg-[#1ba098] text-[#051622] py-4 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-[#deb992] transition-all flex items-center justify-center gap-3 cursor-pointer"
               >
                 Verify & Enter <ArrowRight size={16} />
               </button>
@@ -379,7 +387,7 @@ const ThemePanel = () => {
           {/* Close button for panel */}
           <button 
             onClick={() => setIsDashboardOpen(false)}
-            className="absolute left-[-40px] top-6 bg-[#051622] text-[#deb992] p-2 rounded-l-lg border-y border-l border-[#1ba098]/30"
+            className="absolute left-[-40px] top-6 bg-[#051622] text-[#deb992] p-2 rounded-l-lg border-y border-l border-[#1ba098]/30 cursor-pointer hover:text-[#1ba098] transition-colors"
           >
             <ChevronRight size={24} />
           </button>
@@ -395,7 +403,7 @@ const ThemePanel = () => {
               </div>
               <button 
                 onClick={() => { logout(); setIsDashboardOpen(false); }}
-                className="p-2 text-[#deb992]/40 hover:text-red-400 transition-colors"
+                className="p-2 text-[#deb992]/40 hover:text-red-400 transition-colors cursor-pointer"
                 title="Sign Out"
               >
                 <LogOut size={18} />
@@ -413,7 +421,7 @@ const ThemePanel = () => {
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
                   title={tab.label}
-                  className={`flex-1 flex flex-col items-center justify-center p-2 rounded-xl transition-all ${activeTab === tab.id ? 'bg-[#1ba098] text-[#051622] shadow-lg scale-105' : 'bg-[#051622] text-[#1ba098]/60 hover:text-[#1ba098] hover:bg-[#1ba098]/10'}`}
+                  className={`flex-1 flex flex-col items-center justify-center p-2 rounded-xl transition-all cursor-pointer ${activeTab === tab.id ? 'bg-[#1ba098] text-[#051622] shadow-lg scale-105' : 'bg-[#051622] text-[#1ba098]/60 hover:text-[#1ba098] hover:bg-[#1ba098]/10'}`}
                 >
                   <tab.icon size={18} />
                   <span className="text-[8px] mt-1 font-bold uppercase">{tab.label}</span>
@@ -525,7 +533,7 @@ const ThemePanel = () => {
                     category: 'News',
                     image: 'https://images.unsplash.com/photo-1551632432-c735e8299bc2?auto=format&fit=crop&q=80&w=800'
                   })}
-                  className="w-full flex items-center justify-center gap-3 bg-[#1ba098] text-[#051622] py-4 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-[#deb992] transition-colors shadow-lg"
+                  className="w-full flex items-center justify-center gap-3 bg-[#1ba098] text-[#051622] py-4 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-[#deb992] transition-colors shadow-lg cursor-pointer"
                 >
                   <Plus size={18} /> Add New Post
                 </button>
@@ -547,7 +555,7 @@ const ThemePanel = () => {
                         </div>
                         <button 
                           onClick={() => deletePost(post.id)}
-                          className="text-red-400 opacity-0 group-hover:opacity-100 transition-opacity p-2 hover:bg-red-400/10 rounded-lg"
+                          className="text-red-400 opacity-0 group-hover:opacity-100 transition-opacity p-2 hover:bg-red-400/10 rounded-lg cursor-pointer"
                         >
                           <Trash2 size={16} />
                         </button>
@@ -569,7 +577,7 @@ const ThemePanel = () => {
                     category: 'Mains',
                     image: 'https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=400'
                   })}
-                  className="w-full flex items-center justify-center gap-3 bg-[#1ba098] text-[#051622] py-4 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-[#deb992] transition-colors shadow-lg"
+                  className="w-full flex items-center justify-center gap-3 bg-[#1ba098] text-[#051622] py-4 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-[#deb992] transition-colors shadow-lg cursor-pointer"
                 >
                   <Plus size={18} /> Add Menu Item
                 </button>
@@ -592,7 +600,7 @@ const ThemePanel = () => {
                              <select 
                               value={item.category}
                               onChange={(e) => updateItem(item.id, { category: e.target.value as any })}
-                              className="bg-[#051622] border border-[#1ba098]/20 px-2 py-0.5 rounded text-[10px] font-bold text-white/50 appearance-none"
+                              className="bg-[#051622] border border-[#1ba098]/20 px-2 py-0.5 rounded text-[10px] font-bold text-white/50 appearance-none cursor-pointer"
                             >
                               <option>Starters</option>
                               <option>Mains</option>
@@ -604,7 +612,7 @@ const ThemePanel = () => {
                         </div>
                         <button 
                           onClick={() => deleteItem(item.id)}
-                          className="text-red-400 opacity-0 group-hover:opacity-100 transition-opacity p-2 hover:bg-red-400/10 rounded-lg"
+                          className="text-red-400 opacity-0 group-hover:opacity-100 transition-opacity p-2 hover:bg-red-400/10 rounded-lg cursor-pointer"
                         >
                           <Trash2 size={16} />
                         </button>

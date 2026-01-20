@@ -4,6 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dame | Premium Seafood & Modern British</title>
+    <meta name="description" content="Premium Seafood & Modern British Dining in the heart of Greenwich Village. Experience the finest sustainable catch with New York energy." />
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Dame Restaurant | Premium Seafood" />
+    <meta property="og:description" content="Modern British seafood tradition reimagined with New York energy." />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=1200" />
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,6 +29,7 @@
         font-family: var(--font-sans);
         scroll-behavior: smooth;
         background-color: #051622;
+        -webkit-font-smoothing: antialiased;
       }
       h1, h2, h3, h4, .font-serif {
         font-family: var(--font-serif);
@@ -49,6 +58,21 @@
       .delay-100 { transition-delay: 100ms; }
       .delay-200 { transition-delay: 200ms; }
       .delay-300 { transition-delay: 300ms; }
+
+      /* Custom Scrollbar for CMS */
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #1ba09844;
+        border-radius: 10px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #1ba098;
+      }
     </style>
   <script type="importmap">
 {
@@ -62,7 +86,7 @@
 }
 </script>
 </head>
-  <body class="text-[#deb992] overflow-x-hidden">
+  <body class="text-[#deb992] overflow-x-hidden selection:bg-[#1ba098] selection:text-[#051622]">
     <div id="root"></div>
   </body>
 </html>

@@ -1,12 +1,23 @@
-import React, { useEffect } from 'react';
+
+// Added React to the import list to fix the namespace error
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useApp } from '../App';
-import { ArrowRight, Star, Quote, MapPin, Clock } from 'lucide-react';
+import { ArrowRight, Star, Quote, MapPin, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const Home: React.FC = () => {
   const { config, menu } = useApp();
+  const [offset, setOffset] = useState(0);
+  const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
+  // Parallax and Reveal Logic
   useEffect(() => {
+    const handleScroll = () => {
+      setOffset(window.scrollY);
+    };
+    window.addEventListener('scroll', handleScroll);
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -18,21 +29,111 @@ const Home: React.FC = () => {
     const revealElements = document.querySelectorAll('.reveal');
     revealElements.forEach(el => observer.observe(el));
 
-    return () => observer.disconnect();
-  }, [config, menu]);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      observer.disconnect();
+    };
+  }, []);
+
+  const nextHero = useCallback(() => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setCurrentHeroIndex((prev) => (prev + 1) % config.heroImages.length);
+    setTimeout(() => setIsTransitioning(false), 1000);
+  }, [config.heroImages.length, isTransitioning]);
+
+  const prevHero = useCallback(() => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setCurrentHeroIndex((prev) => (prev - 1 + config.heroImages.length) % config.heroImages.length);
+    setTimeout(() => setIsTransitioning(false), 1000);
+  }, [config.heroImages.length, isTransitioning]);
+
+  // Carousel Auto-play Logic
+  useEffect(() => {
+    const timer = setInterval(() => {
+      nextHero();
+    }, 7000); // Change image every 7 seconds
+    return () => clearInterval(timer);
+  }, [nextHero]);
 
   return (
     <div className="animate-in fade-in duration-700 bg-navy text-sand">
-      {/* Hero Section */}
+      {/* Hero Section with Parallax Carousel */}
       <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <img 
-            src={config.heroImages[0]} 
-            alt="Interior" 
-            className="w-full h-full object-cover brightness-[0.2]"
-          />
+        {/* Carousel Background Images with Zoom effect */}
+        <div 
+          className="absolute inset-0 z-0 scale-105"
+          style={{ 
+            transform: `translateY(${offset * 0.25}px) scale(1.05)`,
+            transition: 'transform 0.1s linear'
+          }}
+        >
+          {config.heroImages.map((img, idx) => (
+            <div
+              key={idx}
+              className={`absolute inset-0 transition-opacity duration-[1500ms] ease-in-out ${
+                idx === currentHeroIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'
+              }`}
+            >
+              <img 
+                src={img} 
+                alt={`Hero ${idx + 1}`} 
+                className={`w-full h-full object-cover brightness-[0.35] transition-transform duration-[7000ms] ease-linear ${
+                  idx === currentHeroIndex ? 'scale-110' : 'scale-100'
+                }`}
+              />
+            </div>
+          ))}
         </div>
-        <div className="relative z-10 text-center px-4 max-w-4xl">
+
+        {/* Carousel Navigation Arrows */}
+        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 z-30 flex justify-between px-6 md:px-12 pointer-events-none">
+          <button 
+            onClick={prevHero} 
+            className="pointer-events-auto p-4 rounded-full bg-black/10 backdrop-blur-sm border border-white/5 text-sand/40 hover:text-teal hover:bg-black/20 hover:scale-110 transition-all group"
+            aria-label="Previous Slide"
+          >
+            <ChevronLeft size={28} className="group-hover:-translate-x-0.5 transition-transform" />
+          </button>
+          <button 
+            onClick={nextHero} 
+            className="pointer-events-auto p-4 rounded-full bg-black/10 backdrop-blur-sm border border-white/5 text-sand/40 hover:text-teal hover:bg-black/20 hover:scale-110 transition-all group"
+            aria-label="Next Slide"
+          >
+            <ChevronRight size={28} className="group-hover:translate-x-0.5 transition-transform" />
+          </button>
+        </div>
+
+        {/* Carousel Indicators with Progress Line */}
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-30 flex gap-4">
+          {config.heroImages.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => {
+                if (!isTransitioning) {
+                   setIsTransitioning(true);
+                   setCurrentHeroIndex(idx);
+                   setTimeout(() => setIsTransitioning(false), 1000);
+                }
+              }}
+              className="group relative h-10 w-12 flex items-center justify-center"
+            >
+              <div className={`h-[2px] transition-all duration-700 ${
+                idx === currentHeroIndex ? 'w-full bg-teal shadow-[0_0_8px_#1ba098]' : 'w-6 bg-white/20 group-hover:bg-white/40'
+              }`} />
+              {idx === currentHeroIndex && (
+                 <div 
+                   className="absolute top-[19px] left-0 h-[2px] bg-white animate-[progress-grow_7000ms_linear_infinite]" 
+                   style={{ width: '0%' }}
+                 />
+              )}
+            </button>
+          ))}
+        </div>
+
+        {/* Hero Content */}
+        <div className="relative z-40 text-center px-4 max-w-4xl">
           <h1 className="text-8xl md:text-[14rem] font-normal text-white mb-4 tracking-normal leading-none font-hero animate-in slide-in-from-bottom duration-1000 drop-shadow-[0_0_40px_rgba(27,160,152,0.3)] hover:scale-[1.03] transition-transform duration-1000 cursor-default select-none">
             {config.name}
           </h1>
@@ -54,16 +155,25 @@ const Home: React.FC = () => {
             </Link>
           </div>
         </div>
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+
+        {/* Scroll Indicator Icon */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce z-20">
           <div className="w-px h-16 bg-teal/50 shadow-[0_0_10px_rgba(27,160,152,0.5)]"></div>
         </div>
+
+        <style>{`
+          @keyframes progress-grow {
+            from { width: 0%; }
+            to { width: 100%; }
+          }
+        `}</style>
       </section>
 
       {/* About Teaser */}
       <section className="py-24 bg-navy overflow-hidden border-b border-teal/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div className="order-2 lg:order-1 reveal">
+            <div className="order-2 lg:order-1 reveal reveal-left">
               <span className="text-teal text-xs font-bold uppercase tracking-widest mb-4 block">Our Story</span>
               <h2 className="text-4xl md:text-5xl font-normal mb-8 leading-tight font-lora italic text-white">A Modern Take on British Seafood</h2>
               <p className="text-lg text-sand opacity-80 leading-relaxed mb-8">
@@ -73,7 +183,7 @@ const Home: React.FC = () => {
                 Learn More <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={18} />
               </Link>
             </div>
-            <div className="order-1 lg:order-2 relative reveal delay-200">
+            <div className="order-1 lg:order-2 relative reveal reveal-right">
               <div className="aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500 group border border-teal/20">
                 <img 
                   src={config.aboutImage} 
@@ -93,14 +203,14 @@ const Home: React.FC = () => {
       {/* Featured Highlights */}
       <section className="py-24 bg-navy overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16 reveal">
+          <div className="text-center mb-16 reveal reveal-scale">
             <span className="text-teal opacity-70 text-xs font-bold uppercase tracking-widest mb-4 block">On The Table</span>
             <h2 className="text-4xl md:text-5xl font-normal text-white font-lora italic">Featured Dishes</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {menu.slice(0, 3).map((item, idx) => (
-              <div key={item.id} className={`group bg-navy-light rounded-2xl overflow-hidden shadow-sm hover:shadow-[0_25px_60px_rgba(27,160,152,0.2)] hover:-translate-y-2 hover:scale-[1.01] transition-all duration-500 reveal delay-${(idx + 1) * 100} border border-teal/20`}>
+              <div key={item.id} className={`group bg-navy-light rounded-2xl overflow-hidden shadow-sm hover:shadow-[0_25px_60px_rgba(27,160,152,0.2)] hover:-translate-y-2 hover:scale-[1.01] transition-all duration-500 reveal reveal-scale border border-teal/20 delay-${(idx + 1) * 100}`}>
                 <div className="aspect-[4/3] overflow-hidden">
                   <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 brightness-90 group-hover:brightness-100" />
                 </div>
@@ -127,7 +237,7 @@ const Home: React.FC = () => {
 
       {/* Testimonials */}
       <section className="py-24 bg-navy overflow-hidden border-y border-teal/20">
-        <div className="max-w-4xl mx-auto px-4 text-center reveal">
+        <div className="max-w-4xl mx-auto px-4 text-center reveal reveal-scale">
           <Quote size={48} className="mx-auto mb-10 text-teal/20" />
           <div className="relative">
             <p className="text-2xl md:text-3xl font-lora italic text-sand leading-relaxed mb-8">
@@ -145,7 +255,7 @@ const Home: React.FC = () => {
       <section className="py-24 bg-navy overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="bg-navy-light rounded-2xl aspect-video w-full flex items-center justify-center overflow-hidden shadow-inner group reveal border border-teal/20">
+            <div className="bg-navy-light rounded-2xl aspect-video w-full flex items-center justify-center overflow-hidden shadow-inner group reveal reveal-left border border-teal/20">
               {/* Map Placeholder */}
               <div className="text-center p-8 group-hover:scale-105 transition-transform duration-700">
                 <MapPin size={32} className="mx-auto mb-4 text-teal" />
@@ -153,7 +263,7 @@ const Home: React.FC = () => {
                 <p className="text-sand opacity-50 text-[10px] mt-2 uppercase tracking-widest font-bold">{config.address}</p>
               </div>
             </div>
-            <div className="lg:pl-12 reveal delay-200">
+            <div className="lg:pl-12 reveal reveal-right">
               <h2 className="text-3xl font-normal mb-8 text-teal font-serif italic">Find Us</h2>
               <div className="space-y-8">
                 <div className="flex items-start group">

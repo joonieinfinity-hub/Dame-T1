@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { HashRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { 
@@ -67,6 +66,29 @@ const ScrollToTop = () => {
   return null;
 };
 
+const ScrollProgressBar = () => {
+  const [scroll, setScroll] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (window.scrollY / totalHeight) * 100;
+      setScroll(progress);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return (
+    <div className="fixed top-0 left-0 w-full h-[2px] z-[100] pointer-events-none">
+      <div 
+        className="h-full bg-teal shadow-[0_0_10px_#1ba098] transition-all duration-100 ease-out origin-left"
+        style={{ width: `${scroll}%` }}
+      />
+    </div>
+  );
+};
+
 const SEOManager = () => {
   const { seo, config } = useApp();
   const location = useLocation();
@@ -85,8 +107,18 @@ const SEOManager = () => {
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { config } = useApp();
   const location = useLocation();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'About', path: '/about' },
@@ -99,26 +131,26 @@ const Header = () => {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-navy text-sand border-b border-teal/30 shadow-xl backdrop-blur-md bg-opacity-95">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-24 items-center">
+    <nav className={`sticky top-0 z-50 bg-navy text-sand border-b transition-all duration-500 backdrop-blur-md ${scrolled ? 'h-16 bg-opacity-95 border-teal/20 shadow-[0_0_30px_rgba(27,160,152,0.1)]' : 'h-24 bg-opacity-90 border-teal/30 shadow-xl'}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+        <div className="flex justify-between h-full items-center">
           <Link to="/" className="flex items-center group overflow-visible">
             {config.showLogoHeader && config.logoUrl ? (
               <div 
                 style={{ padding: `${config.logoPadding}px 0` }}
-                className="flex items-center justify-center transition-transform duration-500 group-hover:scale-105"
+                className="flex items-center justify-center transition-all duration-500 group-hover:scale-105"
               >
                 <img 
                   src={config.logoUrl} 
                   alt={`${config.name} Logo`} 
-                  style={{ height: `${config.logoHeight}px` }}
-                  className="w-auto object-contain max-w-[200px] sm:max-w-none rounded-full border border-teal/10 shadow-lg"
+                  style={{ height: scrolled ? `${config.logoHeight * 0.75}px` : `${config.logoHeight}px` }}
+                  className="w-auto object-contain transition-all duration-500 rounded-full border border-teal/10 shadow-lg"
                 />
               </div>
             ) : (
-              <div className="flex flex-col">
-                <span className="text-3xl font-normal tracking-[0.15em] font-serif text-sand drop-shadow-[0_0_8px_rgba(222,185,146,0.3)] group-hover:tracking-[0.2em] transition-all duration-500 leading-none">{config.name}</span>
-                <span className="text-[10px] uppercase tracking-[0.2em] text-teal font-bold hidden sm:block mt-1">Fine Dining & Seafood</span>
+              <div className="flex flex-col transition-all duration-500">
+                <span className={`font-normal tracking-[0.15em] font-serif text-sand drop-shadow-[0_0_8px_rgba(222,185,146,0.3)] group-hover:tracking-[0.2em] transition-all duration-500 leading-none ${scrolled ? 'text-2xl' : 'text-3xl'}`}>{config.name}</span>
+                {!scrolled && <span className="text-[10px] uppercase tracking-[0.2em] text-teal font-bold hidden sm:block mt-1">Fine Dining & Seafood</span>}
               </div>
             )}
           </Link>
@@ -563,6 +595,7 @@ const App = () => {
       <HashRouter>
         <ScrollToTop />
         <SEOManager />
+        <ScrollProgressBar />
         <div className="min-h-screen flex flex-col bg-navy text-sand selection:bg-teal selection:text-navy">
           <Header />
           <main className="flex-grow">

@@ -1,4 +1,3 @@
-
 import { MenuItem, BlogPost, SiteConfig } from './types';
 
 export const INITIAL_CONFIG: SiteConfig = {
@@ -13,12 +12,12 @@ export const INITIAL_CONFIG: SiteConfig = {
   instagram: "https://www.instagram.com/dame_nyc?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==",
   facebook: "https://facebook.com/damerestaurant",
   heroImages: [
-    "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=1920",
-    "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1920",
-    "https://images.unsplash.com/photo-1551632432-c735e8299bc2?auto=format&fit=crop&q=80&w=1920"
+    "https://image2url.com/r2/default/images/1768936047614-15a4e749-f8dd-4512-9b95-9c5eeb84e530.jpg",
+    "https://image2url.com/r2/default/images/1768936868588-d7867f02-a50f-4e0a-8bcd-6fa933b6efe8.jpg",
+    "https://image2url.com/r2/default/images/1768936913885-85cd4d87-a075-4c49-9fa3-fe29001d0fc6.jpg"
   ],
   aboutText: "Dame is a love letter to the British seafood tradition, reimagined with New York energy. Founded on the principle of sourcing the finest sustainable seafood, we focus on clarity of flavor and precision in execution.",
-  aboutImage: "https://images.unsplash.com/photo-1550966841-391ad5fed2aa?auto=format&fit=crop&q=80&w=800",
+  aboutImage: "https://image2url.com/r2/default/images/1768935150214-36650933-56c7-4296-9d88-db7ed1bc3766.jpeg",
   operatingHours: [
     "Mon - Thu: 5:00 PM - 10:00 PM",
     "Fri - Sat: 5:00 PM - 11:00 PM",
@@ -40,7 +39,7 @@ export const MENU_ITEMS: MenuItem[] = [
     description: 'Grilled oysters topped with a vibrant green Chartreuse hollandaise sauce.',
     price: '$5 each',
     category: 'Starters',
-    image: 'https://images.unsplash.com/photo-1599481238332-b81e86ac1014?auto=format&fit=crop&q=80&w=600',
+    image: 'https://image2url.com/r2/default/images/1768934511706-45e95382-88b2-49a4-b692-1a99af452100.jpg',
     tags: ['GF']
   },
   {
@@ -49,7 +48,7 @@ export const MENU_ITEMS: MenuItem[] = [
     description: 'Char-grilled squid skewers paired with scallions and herbs.',
     price: '$16',
     category: 'Starters',
-    image: 'https://images.unsplash.com/photo-1599481238505-b8b0537a3f77?auto=format&fit=crop&q=80&w=600',
+    image: 'https://image2url.com/r2/default/images/1768935685219-e5c0a4b9-7387-4ca5-a869-eef4c7ca1ec8.jpg',
     tags: ['GF']
   },
   {
@@ -58,7 +57,7 @@ export const MENU_ITEMS: MenuItem[] = [
     description: 'Toasted crumpet with smoked whitefish and rich Welsh rarebit.',
     price: '$18',
     category: 'Starters',
-    image: 'https://images.unsplash.com/photo-1626202114466-411606a7df11?auto=format&fit=crop&q=80&w=600'
+    image: 'https://image2url.com/r2/default/images/1768935836278-a78569fd-3d9e-4d67-a346-156c0544b9e0.jpg'
   },
   {
     id: '4',
@@ -84,7 +83,7 @@ export const MENU_ITEMS: MenuItem[] = [
     description: 'Hand-chopped tuna tartare and bottarga served on crisp toast.',
     price: '$27',
     category: 'Starters',
-    image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=600'
+    image: 'https://image2url.com/r2/default/images/1768934727430-7a89f61f-3513-4ec5-94f1-2a4159e6e256.jpg'
   },
   {
     id: '7',
@@ -127,7 +126,7 @@ export const MENU_ITEMS: MenuItem[] = [
     description: 'Delicate poached cod atop lentils and mushrooms.',
     price: '$38',
     category: 'Mains',
-    image: 'https://images.unsplash.com/photo-1534948665115-3bd423986ec2?auto=format&fit=crop&q=80&w=600',
+    image: 'https://image2url.com/r2/default/images/1768934418132-5f1007b0-53c2-4c6a-abbf-57237038bf5a.jpg',
     tags: ['GF']
   },
   {
@@ -172,7 +171,7 @@ export const MENU_ITEMS: MenuItem[] = [
     description: 'Rich sticky toffee pudding with caramel sauce.',
     price: '$16',
     category: 'Desserts',
-    image: 'https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&q=80&w=600',
+    image: 'https://image2url.com/r2/default/images/1768934241253-5dcb8b96-cdb2-4719-b9e0-0608e3acc413.jpg',
     tags: ['V']
   }
 ];

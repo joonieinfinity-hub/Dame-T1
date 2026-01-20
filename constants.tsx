@@ -29,7 +29,8 @@ export const INITIAL_CONFIG: SiteConfig = {
   logoHeightFooter: 60,
   logoPadding: 16,
   showLogoHeader: true,
-  showLogoFooter: true
+  showLogoFooter: true,
+  headerMaxWidth: 1280
 };
 
 export const MENU_ITEMS: MenuItem[] = [

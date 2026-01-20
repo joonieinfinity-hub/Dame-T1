@@ -42,6 +42,8 @@ export interface SiteConfig {
   logoPadding: number;
   showLogoHeader: boolean;
   showLogoFooter: boolean;
+  // Header Configuration
+  headerMaxWidth: number;
 }
 
 export interface SEOData {

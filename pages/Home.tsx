@@ -1,6 +1,5 @@
-
 // Added React to the import list to fix the namespace error
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useApp } from '../App';
 import { ArrowRight, Star, Quote, MapPin, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -57,6 +56,9 @@ const Home: React.FC = () => {
     return () => clearInterval(timer);
   }, [nextHero]);
 
+  // Split Name for Dynamic Writing Effect
+  const nameChars = useMemo(() => config.name.split(''), [config.name]);
+
   return (
     <div className="animate-in fade-in duration-700 bg-navy text-sand">
       {/* Hero Section with Parallax Carousel */}
@@ -91,14 +93,14 @@ const Home: React.FC = () => {
         <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 z-30 flex justify-between px-6 md:px-12 pointer-events-none">
           <button 
             onClick={prevHero} 
-            className="pointer-events-auto p-4 rounded-full bg-black/10 backdrop-blur-sm border border-white/5 text-sand/40 hover:text-teal hover:bg-black/20 hover:scale-110 transition-all group"
+            className="pointer-events-auto p-4 rounded-full bg-black/10 backdrop-blur-sm border border-white/5 text-sand/40 hover:text-teal hover:bg-black/20 hover:scale-110 active:scale-90 transition-all group"
             aria-label="Previous Slide"
           >
             <ChevronLeft size={28} className="group-hover:-translate-x-0.5 transition-transform" />
           </button>
           <button 
             onClick={nextHero} 
-            className="pointer-events-auto p-4 rounded-full bg-black/10 backdrop-blur-sm border border-white/5 text-sand/40 hover:text-teal hover:bg-black/20 hover:scale-110 transition-all group"
+            className="pointer-events-auto p-4 rounded-full bg-black/10 backdrop-blur-sm border border-white/5 text-sand/40 hover:text-teal hover:bg-black/20 hover:scale-110 active:scale-90 transition-all group"
             aria-label="Next Slide"
           >
             <ChevronRight size={28} className="group-hover:translate-x-0.5 transition-transform" />
@@ -134,22 +136,33 @@ const Home: React.FC = () => {
 
         {/* Hero Content */}
         <div className="relative z-40 text-center px-4 max-w-4xl">
-          <h1 className="text-8xl md:text-[14rem] font-normal text-white mb-4 tracking-normal leading-none font-hero animate-in slide-in-from-bottom duration-1000 drop-shadow-[0_0_40px_rgba(27,160,152,0.3)] hover:scale-[1.03] transition-transform duration-1000 cursor-default select-none">
-            {config.name}
+          <h1 className="text-8xl md:text-[14rem] font-normal text-white mb-4 tracking-normal leading-none font-hero drop-shadow-[0_0_40px_rgba(27,160,152,0.3)] transition-transform duration-1000 cursor-default select-none flex justify-center flex-nowrap whitespace-nowrap overflow-visible">
+            {nameChars.map((char, i) => (
+              <span 
+                key={i} 
+                className="inline-block animate-writing opacity-0"
+                style={{ 
+                  animationDelay: `${100 + (i * 180)}ms`,
+                  animationFillMode: 'both'
+                }}
+              >
+                {char === ' ' ? '\u00A0' : char}
+              </span>
+            ))}
           </h1>
-          <p className="text-xl md:text-2xl text-teal mb-10 font-light tracking-[0.1em] italic animate-in slide-in-from-bottom duration-1000 delay-200">
+          <p className="text-xl md:text-2xl text-teal mb-10 font-light tracking-[0.1em] italic animate-in slide-in-from-bottom duration-1000 delay-[1200ms]">
             {config.tagline}
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-in slide-in-from-bottom duration-1000 delay-300">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-in slide-in-from-bottom duration-1000 delay-[1400ms]">
             <Link 
               to="/menu" 
-              className="w-full sm:w-auto bg-sand text-navy px-10 py-4 rounded-full font-bold uppercase tracking-widest text-sm hover:bg-teal hover:shadow-[0_0_20px_rgba(27,160,152,0.3)] transition-all transform hover:scale-105"
+              className="w-full sm:w-auto bg-sand text-navy px-10 py-4 rounded-full font-bold uppercase tracking-widest text-sm hover:bg-white hover:text-navy hover:shadow-[0_0_30px_rgba(222,185,146,0.6)] hover:scale-110 active:scale-95 transition-all duration-300 shadow-xl"
             >
               View Menu
             </Link>
             <Link 
               to="/reservations" 
-              className="w-full sm:w-auto border border-teal/40 text-sand px-10 py-4 rounded-full font-bold uppercase tracking-widest text-sm hover:bg-teal/20 transition-all"
+              className="w-full sm:w-auto border border-teal text-sand px-10 py-4 rounded-full font-bold uppercase tracking-widest text-sm hover:bg-teal hover:text-navy hover:shadow-[0_0_30px_rgba(27,160,152,0.6)] hover:scale-110 active:scale-95 transition-all duration-300 shadow-xl"
             >
               Reservations
             </Link>
@@ -179,7 +192,7 @@ const Home: React.FC = () => {
               <p className="text-lg text-sand opacity-80 leading-relaxed mb-8">
                 {config.aboutText}
               </p>
-              <Link to="/about" className="group inline-flex items-center text-teal font-bold uppercase tracking-widest text-sm border-b-2 border-teal/30 pb-1 hover:border-sand hover:text-sand transition-all">
+              <Link to="/about" className="group inline-flex items-center text-teal font-bold uppercase tracking-widest text-sm border-b-2 border-teal/30 pb-1 hover:border-sand hover:text-sand hover:scale-105 active:scale-95 transition-all">
                 Learn More <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={18} />
               </Link>
             </div>
@@ -216,7 +229,7 @@ const Home: React.FC = () => {
                 </div>
                 <div className="p-8">
                   <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-xl font-normal font-lora group-hover:text-teal group-hover:scale-105 origin-left transition-all duration-300 text-white">{item.name}</h3>
+                    <h3 className="text-xl font-normal font-lora group-hover:text-teal group-hover:translate-x-1 origin-left transition-all duration-300 text-white">{item.name}</h3>
                     <span className="text-teal font-bold">{item.price}</span>
                   </div>
                   <p className="text-sand opacity-60 text-sm mb-6 leading-relaxed font-lora italic">{item.description}</p>
@@ -227,7 +240,7 @@ const Home: React.FC = () => {
           <div className="text-center mt-12 reveal">
              <Link 
               to="/menu" 
-              className="inline-flex items-center bg-sand text-navy px-10 py-4 rounded-full font-bold uppercase tracking-widest text-sm hover:bg-teal transition-all hover:scale-105"
+              className="inline-flex items-center bg-sand text-navy px-10 py-4 rounded-full font-bold uppercase tracking-widest text-sm hover:bg-teal hover:shadow-[0_0_20px_rgba(27,160,152,0.4)] transition-all hover:scale-110 active:scale-95 shadow-lg"
             >
               Full Menu
             </Link>
@@ -266,15 +279,15 @@ const Home: React.FC = () => {
             <div className="lg:pl-12 reveal reveal-right">
               <h2 className="text-3xl font-normal mb-8 text-teal font-serif italic">Find Us</h2>
               <div className="space-y-8">
-                <div className="flex items-start group">
-                  <MapPin className="text-sand mr-4 mt-1 group-hover:scale-110 transition-transform" size={24} />
+                <div className="flex items-start group hover:translate-x-2 transition-transform duration-300">
+                  <MapPin className="text-sand mr-4 mt-1 group-hover:scale-110 text-teal transition-all" size={24} />
                   <div>
                     <h4 className="font-bold uppercase tracking-widest text-xs mb-2 text-sand opacity-50">Location</h4>
                     <p className="text-sand">{config.address}</p>
                   </div>
                 </div>
-                <div className="flex items-start group">
-                  <Clock className="text-sand mr-4 mt-1 group-hover:scale-110 transition-transform" size={24} />
+                <div className="flex items-start group hover:translate-x-2 transition-transform duration-300">
+                  <Clock className="text-sand mr-4 mt-1 group-hover:scale-110 text-teal transition-all" size={24} />
                   <div>
                     <h4 className="font-bold uppercase tracking-widest text-xs mb-2 text-sand opacity-50">Hours</h4>
                     <ul className="text-sand space-y-1">

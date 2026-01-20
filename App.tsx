@@ -4,7 +4,7 @@ import {
   Menu as MenuIcon, X, Instagram, Facebook, Mail, MapPin, 
   Phone, Settings, Check, ChevronRight, ArrowRight,
   Plus, Trash2, Globe, Layout, Utensils, PenTool, ExternalLink,
-  Lock, LogOut, UserCheck
+  Lock, LogOut, UserCheck, Image as ImageIcon
 } from 'lucide-react';
 import { INITIAL_CONFIG, MENU_ITEMS, BLOG_POSTS } from './constants';
 import { SiteConfig, MenuItem, BlogPost, SEOData } from './types';
@@ -293,11 +293,14 @@ const ThemePanel = () => {
                 {posts.map(post => (
                   <div key={post.id} className="p-4 bg-[#0a2130] rounded-2xl border border-[#1ba098]/10 group">
                     <div className="flex justify-between items-start mb-3">
-                      <input value={post.title} onChange={(e) => updatePost(post.id, { title: e.target.value })} className="flex-grow bg-transparent border-none p-0 font-bold text-white focus:ring-0" />
+                      <input value={post.title} onChange={(e) => updatePost(post.id, { title: e.target.value })} className="flex-grow bg-transparent border-none p-0 font-bold text-white focus:ring-0 outline-none" />
                       <button onClick={() => deletePost(post.id)} className="text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"><Trash2 size={16} /></button>
                     </div>
-                    <textarea value={post.excerpt} onChange={(e) => updatePost(post.id, { excerpt: e.target.value })} className="w-full bg-[#051622] p-2 rounded-lg text-[10px] mb-2 border border-[#1ba098]/10 outline-none" />
-                    <input value={post.image} onChange={(e) => updatePost(post.id, { image: e.target.value })} className="w-full bg-[#051622] p-1 rounded text-[8px] border border-[#1ba098]/10 outline-none" />
+                    <textarea value={post.excerpt} onChange={(e) => updatePost(post.id, { excerpt: e.target.value })} className="w-full bg-[#051622] p-2 rounded-lg text-[10px] mb-2 border border-[#1ba098]/10 outline-none h-20 resize-none" placeholder="Excerpt..." />
+                    <div className="flex gap-2">
+                       <input value={post.author} onChange={(e) => updatePost(post.id, { author: e.target.value })} className="flex-1 bg-[#051622] p-2 rounded-lg text-[10px] border border-[#1ba098]/10 outline-none" placeholder="Author..." />
+                       <input value={post.image} onChange={(e) => updatePost(post.id, { image: e.target.value })} className="flex-1 bg-[#051622] p-2 rounded-lg text-[10px] border border-[#1ba098]/10 outline-none" placeholder="Image URL..." />
+                    </div>
                   </div>
                 ))}
               </div>
@@ -316,15 +319,17 @@ const ThemePanel = () => {
                 {menu.map(item => (
                   <div key={item.id} className="p-4 bg-[#0a2130] rounded-2xl border border-[#1ba098]/10 group">
                     <div className="flex justify-between items-start mb-3">
-                      <input value={item.name} onChange={(e) => updateItem(item.id, { name: e.target.value })} className="flex-grow bg-transparent border-none p-0 font-bold text-white focus:ring-0" />
+                      <input value={item.name} onChange={(e) => updateItem(item.id, { name: e.target.value })} className="flex-grow bg-transparent border-none p-0 font-bold text-white focus:ring-0 outline-none" />
                       <button onClick={() => deleteItem(item.id)} className="text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"><Trash2 size={16} /></button>
                     </div>
-                    <div className="flex gap-2">
-                      <input value={item.price} onChange={(e) => updateItem(item.id, { price: e.target.value })} className="w-16 bg-[#051622] p-1 rounded text-[10px] border border-[#1ba098]/10" />
-                      <select value={item.category} onChange={(e) => updateItem(item.id, { category: e.target.value as any })} className="flex-grow bg-[#051622] p-1 rounded text-[10px] border border-[#1ba098]/10 text-white/50">
+                    <textarea value={item.description} onChange={(e) => updateItem(item.id, { description: e.target.value })} className="w-full bg-[#051622] p-2 rounded-lg text-[10px] mb-3 border border-[#1ba098]/10 outline-none h-16 resize-none" placeholder="Description..." />
+                    <div className="flex gap-2 mb-2">
+                      <input value={item.price} onChange={(e) => updateItem(item.id, { price: e.target.value })} className="w-20 bg-[#051622] p-2 rounded-lg text-[10px] border border-[#1ba098]/10 outline-none" placeholder="Price..." />
+                      <select value={item.category} onChange={(e) => updateItem(item.id, { category: e.target.value as any })} className="flex-grow bg-[#051622] p-2 rounded-lg text-[10px] border border-[#1ba098]/10 text-white/50">
                         <option>Starters</option><option>Mains</option><option>Sides</option><option>Desserts</option><option>Drinks</option>
                       </select>
                     </div>
+                    <input value={item.image} onChange={(e) => updateItem(item.id, { image: e.target.value })} className="w-full bg-[#051622] p-2 rounded-lg text-[10px] border border-[#1ba098]/10 outline-none" placeholder="Image URL..." />
                   </div>
                 ))}
               </div>
@@ -339,8 +344,13 @@ const ThemePanel = () => {
 const App = () => {
   // Persistence Loading
   const loadInitial = <T,>(key: string, fallback: T): T => {
-    const saved = localStorage.getItem(key);
-    return saved ? JSON.parse(saved) : fallback;
+    try {
+      const saved = localStorage.getItem(key);
+      return saved ? JSON.parse(saved) : fallback;
+    } catch (e) {
+      console.warn(`Error loading state for ${key}`, e);
+      return fallback;
+    }
   };
 
   const [config, setConfig] = useState<SiteConfig>(() => loadInitial('dame_config', INITIAL_CONFIG));
@@ -384,7 +394,7 @@ const App = () => {
       <HashRouter>
         <ScrollToTop />
         <SEOManager />
-        <div className="min-h-screen flex flex-col bg-[#051622] text-[#deb992]">
+        <div className="min-h-screen flex flex-col bg-[#051622] text-[#deb992] selection:bg-[#1ba098] selection:text-[#051622]">
           <Header />
           <main className="flex-grow">
             <Routes>

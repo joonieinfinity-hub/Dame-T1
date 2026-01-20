@@ -20,21 +20,21 @@ const About: React.FC = () => {
   }, []);
 
   return (
-    <div className="animate-in fade-in duration-700 bg-[#051622] text-[#deb992]">
-      <section className="py-24 bg-[#051622] overflow-hidden">
+    <div className="animate-in fade-in duration-700 bg-navy text-sand">
+      <section className="py-24 bg-navy overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20 reveal">
             <h1 className="text-5xl md:text-7xl font-bold mb-6 font-serif text-white uppercase italic">The Dame Story</h1>
-            <p className="text-[#deb992] opacity-70 max-w-2xl mx-auto italic">Founded in the heart of Greenwich Village, we bring the best of the British coast to New York City.</p>
+            <p className="text-sand opacity-70 max-w-2xl mx-auto italic">Founded in the heart of Greenwich Village, we bring the best of the British coast to New York City.</p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center mb-32">
-            <div className="aspect-square bg-[#0a2130] rounded-3xl overflow-hidden shadow-xl reveal border border-[#1ba098]/20">
+            <div className="aspect-square bg-navy-light rounded-3xl overflow-hidden shadow-xl reveal border border-teal/20">
               <img src="https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&q=80&w=800" alt="Kitchen" className="w-full h-full object-cover grayscale-[0.2] contrast-125" />
             </div>
             <div className="reveal delay-200">
-              <h2 className="text-3xl font-bold mb-6 font-serif italic text-[#1ba098]">Culinary Philosophy</h2>
-              <div className="space-y-6 text-[#deb992] opacity-80 leading-relaxed text-lg">
+              <h2 className="text-3xl font-bold mb-6 font-serif italic text-teal">Culinary Philosophy</h2>
+              <div className="space-y-6 text-sand opacity-80 leading-relaxed text-lg">
                 <p>
                   Our journey began with a simple pop-up and a obsession with the perfect piece of fried hake. We believed that seafood didn't need to be complex to be extraordinary—it just needed to be fresh, treated with respect, and served with a sense of fun.
                 </p>
@@ -59,14 +59,14 @@ const About: React.FC = () => {
               { name: 'James Milton', role: 'Head Sommelier', img: 'https://images.unsplash.com/photo-1559839734-2b71f1536783?auto=format&fit=crop&q=80&w=400' }
             ].map((member, i) => (
               <div key={i} className={`group reveal delay-${(i + 1) * 100}`}>
-                <div className="aspect-[3/4] overflow-hidden rounded-2xl mb-6 relative border border-[#1ba098]/30 bg-[#0a2130]">
+                <div className="aspect-[3/4] overflow-hidden rounded-2xl mb-6 relative border border-teal/30 bg-navy-light">
                   <img src={member.img} alt={member.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 grayscale-[0.3] group-hover:grayscale-0" />
-                  <div className="absolute inset-0 bg-[#051622]/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-6 text-center text-white backdrop-blur-[2px]">
-                    <p className="text-sm italic text-[#deb992]">"Hospitality is about making people feel like they're the only ones in the room."</p>
+                  <div className="absolute inset-0 bg-navy/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-6 text-center text-white backdrop-blur-[2px]">
+                    <p className="text-sm italic text-sand">"Hospitality is about making people feel like they're the only ones in the room."</p>
                   </div>
                 </div>
                 <h3 className="text-xl font-bold font-serif text-white">{member.name}</h3>
-                <p className="text-xs uppercase tracking-widest text-[#1ba098] font-bold opacity-80">{member.role}</p>
+                <p className="text-xs uppercase tracking-widest text-teal font-bold opacity-80">{member.role}</p>
               </div>
             ))}
           </div>

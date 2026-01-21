@@ -1,3 +1,4 @@
+
 import { MenuItem, BlogPost, SiteConfig } from './types';
 
 export const INITIAL_CONFIG: SiteConfig = {
@@ -66,7 +67,7 @@ export const MENU_ITEMS: MenuItem[] = [
     description: 'Fresh scallops paired with crisp apple and kohlrabi.',
     price: '$22',
     category: 'Starters',
-    image: 'https://images.unsplash.com/photo-1604544079120-83ef42bac757?auto=format&fit=crop&q=80&w=600',
+    image: 'https://image2url.com/r2/default/images/1769020968319-7ec12775-718e-4247-9612-bbc6e9430700.jpg',
     tags: ['GF']
   },
   {
@@ -75,7 +76,7 @@ export const MENU_ITEMS: MenuItem[] = [
     description: 'Delicate poached leeks dressed with gribiche and anchovies.',
     price: '$21',
     category: 'Starters',
-    image: 'https://images.unsplash.com/photo-1588653018267-33f7d4681691?auto=format&fit=crop&q=80&w=600',
+    image: 'https://image2url.com/r2/default/images/1769020553385-a9d812f9-0370-49ca-8fd5-57cf39041b0a.jpg',
     tags: ['GF']
   },
   {
@@ -92,7 +93,7 @@ export const MENU_ITEMS: MenuItem[] = [
     description: 'Creamy butter beans with sautéed chanterelles and boquerones.',
     price: '$24',
     category: 'Starters',
-    image: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&q=80&w=600',
+    image: 'https://image2url.com/r2/default/images/1769020026170-b93bbeeb-c924-43c1-b925-6930f5724c71.jpg',
     tags: ['GF']
   },
   {
@@ -101,7 +102,7 @@ export const MENU_ITEMS: MenuItem[] = [
     description: 'Charred cabbage with smoked mussels and horseradish.',
     price: '$26',
     category: 'Starters',
-    image: 'https://images.unsplash.com/photo-1551248429-40975aa4de74?auto=format&fit=crop&q=80&w=600',
+    image: 'https://image2url.com/r2/default/images/1769019819085-d1af9993-f809-4732-b1f7-8cba9bba3ef2.jpg',
     tags: ['GF']
   },
   {
@@ -110,7 +111,7 @@ export const MENU_ITEMS: MenuItem[] = [
     description: 'Classic fish and chips with crispy batter and golden fries.',
     price: '$32',
     category: 'Mains',
-    image: 'https://images.unsplash.com/photo-1579208575657-c595a05383b7?auto=format&fit=crop&q=80&w=600'
+    image: 'https://image2url.com/r2/default/images/1769020389476-abea5e60-f099-4838-b5c2-d11cafad5228.jpg'
   },
   {
     id: '10',
@@ -127,7 +128,7 @@ export const MENU_ITEMS: MenuItem[] = [
     description: 'Delicate poached cod atop lentils and mushrooms.',
     price: '$38',
     category: 'Mains',
-    image: 'https://image2url.com/r2/default/images/1768934418132-5f1007b0-53c2-4c6a-abbf-57237038bf5a.jpg',
+    image: 'https://image2url.com/r2/default/images/1769021209963-1f7d74f0-7809-42a9-883b-a76d6438adde.jpg',
     tags: ['GF']
   },
   {

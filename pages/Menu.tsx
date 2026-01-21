@@ -94,7 +94,7 @@ const MenuPage: React.FC = () => {
                     idx === currentSlide ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
                   }`}>
                     <span className="text-teal text-[10px] uppercase tracking-[0.4em] font-bold mb-3 block">Featured Presentation</span>
-                    <h2 className="text-4xl md:text-6xl font-normal font-serif italic text-white mb-4 drop-shadow-2xl">{item.name}</h2>
+                    <h2 className="text-4xl md:text-6xl font-normal font-bodoni italic text-white mb-4 drop-shadow-2xl">{item.name}</h2>
                     <p className="text-sand/70 max-w-xl mx-auto italic font-lora text-sm md:text-base mb-2">{item.description}</p>
                     <span className="text-teal font-bold text-xl">{item.price}</span>
                   </div>
@@ -191,7 +191,7 @@ const MenuPage: React.FC = () => {
 
                 <div className="flex-grow flex flex-col">
                   <div className="flex items-baseline gap-2 mb-2">
-                    <h3 className="text-lg font-bold font-lora text-white group-hover:text-teal transition-colors duration-300 leading-snug">
+                    <h3 className="text-lg font-bold font-bodoni text-white group-hover:text-teal transition-colors duration-300 leading-snug">
                       {item.name}
                     </h3>
                     <div className="flex-grow border-b border-dotted border-teal/20 min-w-[20px] mb-1"></div>

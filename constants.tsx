@@ -31,7 +31,8 @@ export const INITIAL_CONFIG: SiteConfig = {
   logoPadding: 16,
   showLogoHeader: true,
   showLogoFooter: true,
-  headerMaxWidth: 1280
+  headerMaxWidth: 1280,
+  manualMood: ""
 };
 
 export const MENU_ITEMS: MenuItem[] = [

@@ -1,14 +1,97 @@
-// Added React to the import list to fix the namespace error
+
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useApp } from '../App';
-import { ArrowRight, Star, Quote, MapPin, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowRight, Star, Quote, MapPin, Clock, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
+import { GoogleGenAI, Type } from "@google/genai";
+
+interface AtmosphereConfig {
+  overlayGradient: string;
+  brightness: number;
+  contrast: number;
+  sepia: number;
+  showStars: boolean;
+  moodLabel: string;
+}
+
+const StarField: React.FC<{ active: boolean }> = ({ active }) => {
+  if (!active) return null;
+  return (
+    <div className="absolute inset-0 z-20 pointer-events-none overflow-hidden opacity-40">
+      {[...Array(50)].map((_, i) => (
+        <div
+          key={i}
+          className="absolute bg-white rounded-full animate-pulse"
+          style={{
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+            width: `${Math.random() * 3}px`,
+            height: `${Math.random() * 3}px`,
+            animationDelay: `${Math.random() * 5}s`,
+            animationDuration: `${2 + Math.random() * 4}s`
+          }}
+        />
+      ))}
+    </div>
+  );
+};
 
 const Home: React.FC = () => {
   const { config, menu } = useApp();
   const [offset, setOffset] = useState(0);
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  
+  // AI Atmosphere State
+  const [atmosphere, setAtmosphere] = useState<AtmosphereConfig>({
+    overlayGradient: 'linear-gradient(to bottom, rgba(5, 22, 34, 0.4), rgba(5, 22, 34, 0.8))',
+    brightness: 0.8,
+    contrast: 1,
+    sepia: 0,
+    showStars: false,
+    moodLabel: 'Coastal Standard'
+  });
+
+  // Determine Atmosphere via AI
+  useEffect(() => {
+    const fetchAtmosphere = async () => {
+      try {
+        const hour = new Date().getHours();
+        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+        
+        const response = await ai.models.generateContent({
+          model: 'gemini-3-flash-preview',
+          contents: `The current local hour is ${hour}:00. Dame is a premium seafood restaurant in NYC. 
+          Direct the visual atmosphere of our website's hero section. 
+          If it's night, suggest starry/darker tones. If morning, suggest bright/crisp. If sunset, suggest golden/sepia.`,
+          config: {
+            responseMimeType: "application/json",
+            responseSchema: {
+              type: Type.OBJECT,
+              properties: {
+                overlayGradient: { type: Type.STRING, description: "CSS linear-gradient for the overlay tint" },
+                brightness: { type: Type.NUMBER, description: "CSS brightness (0.3 to 1.1)" },
+                contrast: { type: Type.NUMBER, description: "CSS contrast (0.9 to 1.2)" },
+                sepia: { type: Type.NUMBER, description: "CSS sepia (0 to 0.4)" },
+                showStars: { type: Type.BOOLEAN, description: "True if hour is between 20 and 5" },
+                moodLabel: { type: Type.STRING, description: "Elegant title for this mood" }
+              },
+              required: ["overlayGradient", "brightness", "contrast", "sepia", "showStars", "moodLabel"]
+            }
+          }
+        });
+
+        if (response.text) {
+          const result = JSON.parse(response.text.trim());
+          setAtmosphere(result);
+        }
+      } catch (error) {
+        console.error("AI Atmosphere selection failed:", error);
+      }
+    };
+
+    fetchAtmosphere();
+  }, []);
 
   // Parallax and Reveal Logic
   useEffect(() => {
@@ -48,27 +131,25 @@ const Home: React.FC = () => {
     setTimeout(() => setIsTransitioning(false), 1000);
   }, [config.heroImages.length, isTransitioning]);
 
-  // Carousel Auto-play Logic
   useEffect(() => {
     const timer = setInterval(() => {
       nextHero();
-    }, 7000); // Change image every 7 seconds
+    }, 7000);
     return () => clearInterval(timer);
   }, [nextHero]);
 
-  // Split Name for Dynamic Writing Effect
   const nameChars = useMemo(() => config.name.split(''), [config.name]);
 
   return (
     <div className="animate-in fade-in duration-700 bg-navy text-sand">
       {/* Hero Section with Parallax Carousel */}
       <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
-        {/* Carousel Background Images with Zoom effect */}
+        {/* Dynamic AI Background Lighting */}
         <div 
-          className="absolute inset-0 z-0 scale-105"
+          className="absolute inset-0 z-0 transition-all duration-[2000ms] ease-in-out"
           style={{ 
+            filter: `brightness(${atmosphere.brightness}) contrast(${atmosphere.contrast}) sepia(${atmosphere.sepia})`,
             transform: `translateY(${offset * 0.25}px) scale(1.05)`,
-            transition: 'transform 0.1s linear'
           }}
         >
           {config.heroImages.map((img, idx) => (
@@ -81,12 +162,29 @@ const Home: React.FC = () => {
               <img 
                 src={img} 
                 alt={`Hero ${idx + 1}`} 
-                className={`w-full h-full object-cover brightness-[0.35] transition-transform duration-[7000ms] ease-linear ${
+                className={`w-full h-full object-cover transition-transform duration-[7000ms] ease-linear ${
                   idx === currentHeroIndex ? 'scale-110' : 'scale-100'
                 }`}
               />
             </div>
           ))}
+        </div>
+
+        {/* AI Directed Overlay */}
+        <div 
+          className="absolute inset-0 z-10 transition-colors duration-[2000ms]" 
+          style={{ background: atmosphere.overlayGradient }}
+        />
+
+        {/* Starry Night Layer */}
+        <StarField active={atmosphere.showStars} />
+
+        {/* AI Mood Indicator */}
+        <div className="absolute bottom-10 left-10 z-50 hidden lg:flex items-center gap-2 px-4 py-2 rounded-full border border-teal/20 bg-navy/40 backdrop-blur-md opacity-60 hover:opacity-100 transition-opacity">
+          <Sparkles size={12} className="text-teal animate-pulse" />
+          <span className="text-[9px] font-bold uppercase tracking-widest text-teal">
+            Atmosphere: {config.manualMood || atmosphere.moodLabel}
+          </span>
         </div>
 
         {/* Carousel Navigation Arrows */}
@@ -107,33 +205,6 @@ const Home: React.FC = () => {
           </button>
         </div>
 
-        {/* Carousel Indicators with Progress Line */}
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-30 flex gap-4">
-          {config.heroImages.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => {
-                if (!isTransitioning) {
-                   setIsTransitioning(true);
-                   setCurrentHeroIndex(idx);
-                   setTimeout(() => setIsTransitioning(false), 1000);
-                }
-              }}
-              className="group relative h-10 w-12 flex items-center justify-center"
-            >
-              <div className={`h-[2px] transition-all duration-700 ${
-                idx === currentHeroIndex ? 'w-full bg-teal shadow-[0_0_8px_#1ba098]' : 'w-6 bg-white/20 group-hover:bg-white/40'
-              }`} />
-              {idx === currentHeroIndex && (
-                 <div 
-                   className="absolute top-[19px] left-0 h-[2px] bg-white animate-[progress-grow_7000ms_linear_infinite]" 
-                   style={{ width: '0%' }}
-                 />
-              )}
-            </button>
-          ))}
-        </div>
-
         {/* Hero Content */}
         <div className="relative z-40 text-center px-4 max-w-4xl">
           <h1 className="text-8xl md:text-[14rem] font-normal text-white mb-4 tracking-normal leading-none font-hero drop-shadow-[0_0_40px_rgba(27,160,152,0.3)] transition-transform duration-1000 cursor-default select-none flex justify-center flex-nowrap whitespace-nowrap overflow-visible">
@@ -142,7 +213,6 @@ const Home: React.FC = () => {
                 key={i} 
                 className="inline-block animate-writing opacity-0"
                 style={{ 
-                  /* Slightly slower stagger delay (300ms) for a more refined feel */
                   animationDelay: `${400 + (i * 300)}ms`,
                   animationFillMode: 'both'
                 }}
@@ -174,13 +244,6 @@ const Home: React.FC = () => {
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce z-20">
           <div className="w-px h-16 bg-teal/50 shadow-[0_0_10px_rgba(27,160,152,0.5)]"></div>
         </div>
-
-        <style>{`
-          @keyframes progress-grow {
-            from { width: 0%; }
-            to { width: 100%; }
-          }
-        `}</style>
       </section>
 
       {/* About Teaser */}

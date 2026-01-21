@@ -44,6 +44,8 @@ export interface SiteConfig {
   showLogoFooter: boolean;
   // Header Configuration
   headerMaxWidth: number;
+  // Mood Configuration
+  manualMood?: string;
 }
 
 export interface SEOData {

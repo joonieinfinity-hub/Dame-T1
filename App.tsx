@@ -1,10 +1,11 @@
+
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { HashRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { 
   Menu as MenuIcon, X, Instagram, Facebook, Mail, MapPin, 
   Phone, Settings, Check, ChevronRight, ArrowRight,
   Plus, Trash2, Globe, Layout, Utensils, PenTool, ExternalLink,
-  Lock, LogOut, UserCheck, Image as ImageIcon, Eye, EyeOff, Maximize, Minimize, Save
+  Lock, LogOut, UserCheck, Image as ImageIcon, Eye, EyeOff, Maximize, Minimize, Save, Sparkles
 } from 'lucide-react';
 import { INITIAL_CONFIG, MENU_ITEMS, BLOG_POSTS } from './constants';
 import { SiteConfig, MenuItem, BlogPost, SEOData } from './types';
@@ -281,7 +282,7 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row gap-6 md:gap-12 items-center text-center md:text-left">
             <p>© {new Date().getFullYear()} {config.name}. All Rights Reserved.</p>
             <button onClick={handleStaffToggle} className="flex items-center gap-3 hover:text-teal transition-all group cursor-pointer font-bold hover:scale-105 active:scale-95">
-              {isAuthenticated ? <Settings size={14} className="group-hover:rotate-90 transition-transform" /> : <Lock size={14} />} Staff Login
+              {isAuthenticated ? <Settings size={14} className="group-hover:rotate-90 transition-transform" /> : <Lock size={14} />} <span className="font-lora italic lowercase">Staff Login</span>
             </button>
           </div>
           <div className="flex space-x-10 mt-8 md:mt-0">
@@ -295,7 +296,7 @@ const Footer = () => {
 };
 
 const ThemePanel = () => {
-  const [activeTab, setActiveTab] = useState<'general' | 'seo' | 'blog' | 'menu' | 'logo'>('general');
+  const [activeTab, setActiveTab] = useState<'general' | 'seo' | 'blog' | 'menu' | 'logo' | 'atmosphere'>('general');
   const [usernameInput, setUsernameInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
   const [loginError, setLoginError] = useState('');
@@ -344,7 +345,7 @@ const ThemePanel = () => {
             <button onClick={() => setShowLoginModal(false)} className="absolute top-12 right-12 text-sand/40 hover:text-teal transition-all hover:rotate-90 cursor-pointer active:scale-75"><X size={28} /></button>
             <div className="text-center mb-12">
               <div className="w-20 h-20 bg-teal/10 text-teal rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner"><Lock size={36} /></div>
-              <h2 className="text-3xl font-serif italic text-white mb-3 uppercase tracking-tighter">Staff Portal</h2>
+              <h2 className="text-3xl font-bodoni italic text-white mb-3 uppercase tracking-tighter">Staff Portal</h2>
               <p className="text-[10px] uppercase tracking-widest text-teal/60 font-bold">Authorized Access Only</p>
             </div>
             <form onSubmit={handleLogin} className="space-y-6">
@@ -383,14 +384,15 @@ const ThemePanel = () => {
           <div className="p-8 border-b border-teal/10 bg-navy-light/50">
             <div className="flex justify-between items-center mb-10">
               <div>
-                <h3 className="text-2xl font-serif italic text-teal tracking-tighter uppercase">Studio</h3>
+                <h3 className="text-2xl font-bodoni italic text-teal tracking-tighter uppercase">Studio</h3>
                 <div className="flex items-center gap-3 mt-2"><div className="w-2 h-2 rounded-full bg-teal animate-pulse"></div><span className="text-[9px] font-bold opacity-50 uppercase tracking-widest">{userEmail}</span></div>
               </div>
               <button onClick={() => { logout(); setIsDashboardOpen(false); }} className="p-3 text-sand/30 hover:text-red-400 transition-all hover:bg-red-400/5 hover:scale-110 active:scale-90 cursor-pointer rounded-xl" title="Logout"><LogOut size={20} /></button>
             </div>
-            <div className="grid grid-cols-5 gap-2">
+            <div className="grid grid-cols-6 gap-2">
               {[
                 { id: 'general', icon: Layout, label: 'Core' }, 
+                { id: 'atmosphere', icon: Sparkles, label: 'Vibe' },
                 { id: 'logo', icon: ImageIcon, label: 'Brand' }, 
                 { id: 'seo', icon: Globe, label: 'SEO' }, 
                 { id: 'blog', icon: PenTool, label: 'Blog' }, 
@@ -399,10 +401,10 @@ const ThemePanel = () => {
                 <button 
                   key={tab.id} 
                   onClick={() => setActiveTab(tab.id as any)} 
-                  className={`flex flex-col items-center justify-center p-3 rounded-2xl transition-all cursor-pointer border hover:scale-105 active:scale-95 ${activeTab === tab.id ? 'bg-teal border-teal text-navy shadow-lg shadow-teal/20' : 'bg-navy/50 border-teal/10 text-teal/60 hover:border-teal/30 hover:text-teal'}`}
+                  className={`flex flex-col items-center justify-center p-2 rounded-2xl transition-all cursor-pointer border hover:scale-105 active:scale-95 ${activeTab === tab.id ? 'bg-teal border-teal text-navy shadow-lg shadow-teal/20' : 'bg-navy/50 border-teal/10 text-teal/60 hover:border-teal/30 hover:text-teal'}`}
                 >
-                  <tab.icon size={18} />
-                  <span className="text-[8px] mt-2 font-bold uppercase tracking-tighter">{tab.label}</span>
+                  <tab.icon size={16} />
+                  <span className="text-[7px] mt-1.5 font-bold uppercase tracking-tighter">{tab.label}</span>
                 </button>
               ))}
             </div>
@@ -413,7 +415,7 @@ const ThemePanel = () => {
               <div className="space-y-10 animate-in slide-in-from-bottom duration-500">
                 <div className="flex items-center gap-4 border-b border-teal/10 pb-4">
                   <Layout size={20} className="text-teal" />
-                  <h4 className="text-xs uppercase tracking-[0.3em] font-bold text-teal opacity-70">General Information</h4>
+                  <h4 className="text-xl font-bodoni italic uppercase tracking-[0.1em] text-teal opacity-70">General Information</h4>
                 </div>
                 <div className="space-y-8">
                   <div><label className="block text-[10px] font-bold uppercase opacity-40 mb-3 tracking-widest">Site Name</label><input value={config.name} onChange={(e) => updateConfig({ name: e.target.value })} className="w-full bg-navy-light border border-teal/20 p-4 text-sm rounded-2xl text-sand outline-none focus:border-teal transition-colors" /></div>
@@ -424,11 +426,42 @@ const ThemePanel = () => {
               </div>
             )}
 
+            {activeTab === 'atmosphere' && (
+              <div className="space-y-10 animate-in slide-in-from-bottom duration-500">
+                <div className="flex items-center gap-4 border-b border-teal/10 pb-4">
+                  <Sparkles size={20} className="text-teal" />
+                  <h4 className="text-xl font-bodoni italic uppercase tracking-[0.1em] text-teal opacity-70">Atmosphere Studio</h4>
+                </div>
+                <div className="space-y-8">
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase opacity-40 mb-3 tracking-widest">Hero Mood Label Override</label>
+                    <div className="relative group">
+                      <input 
+                        value={config.manualMood} 
+                        onChange={(e) => updateConfig({ manualMood: e.target.value })} 
+                        placeholder="e.g. Midnight Catch" 
+                        className="w-full bg-navy-light border border-teal/20 p-4 text-sm rounded-2xl text-sand outline-none focus:border-teal transition-colors pr-20" 
+                      />
+                      {config.manualMood && (
+                        <button 
+                          onClick={() => updateConfig({ manualMood: "" })}
+                          className="absolute right-4 top-1/2 -translate-y-1/2 text-[9px] font-bold text-teal hover:text-white transition-colors bg-teal/10 px-2 py-1 rounded"
+                        >
+                          RESET
+                        </button>
+                      )}
+                    </div>
+                    <p className="mt-4 text-[10px] italic text-sand/40">Enter a manual label to override the dynamic AI atmosphere detection. Leave empty to restore AI-driven labels based on the local time of day.</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {activeTab === 'logo' && (
               <div className="space-y-12 animate-in slide-in-from-bottom duration-500">
                 <div className="flex items-center gap-4 border-b border-teal/10 pb-4">
                   <ImageIcon size={20} className="text-teal" />
-                  <h4 className="text-xs uppercase tracking-[0.3em] font-bold text-teal opacity-70">Logo & Identity</h4>
+                  <h4 className="text-xl font-bodoni italic uppercase tracking-[0.1em] text-teal opacity-70">Logo & Identity</h4>
                 </div>
                 
                 <div className="space-y-8">
@@ -516,7 +549,7 @@ const ThemePanel = () => {
               <div className="space-y-10 animate-in slide-in-from-bottom duration-500">
                 <div className="flex items-center gap-4 border-b border-teal/10 pb-4">
                   <Globe size={20} className="text-teal" />
-                  <h4 className="text-xs uppercase tracking-[0.3em] font-bold text-teal opacity-70">Optimization: {location.pathname}</h4>
+                  <h4 className="text-xl font-bodoni italic uppercase tracking-[0.1em] text-teal opacity-70">Optimization: {location.pathname}</h4>
                 </div>
                 <div className="space-y-8">
                   <div><label className="block text-[10px] font-bold uppercase opacity-40 mb-3 tracking-widest">Meta Title</label><input value={currentSEO.title} onChange={(e) => updateSEO(location.pathname, { ...currentSEO, title: e.target.value })} className="w-full bg-navy-light border border-teal/20 p-4 text-sm rounded-2xl text-sand outline-none focus:border-teal transition-colors" /></div>

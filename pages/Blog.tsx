@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useApp } from '../App';
 import { Calendar, User, ArrowRight, Tag } from 'lucide-react';
@@ -25,7 +26,7 @@ const Blog: React.FC = () => {
                     <span className="flex items-center gap-2 text-teal"><Calendar size={14} /> {post.date}</span>
                     <span className="flex items-center gap-2"><User size={14} /> {post.author}</span>
                   </div>
-                  <h2 className="text-3xl font-bold font-serif mb-6 group-hover:text-teal transition-colors duration-300 text-white">{post.title}</h2>
+                  <h2 className="text-3xl font-bold font-bodoni mb-6 group-hover:text-teal transition-colors duration-300 text-white">{post.title}</h2>
                   <p className="text-sand opacity-70 leading-relaxed mb-8 group-hover:opacity-100 transition-opacity italic">{post.excerpt}</p>
                   <div className="flex justify-between items-center mt-auto">
                     <div className="flex items-center gap-2 text-[10px] font-bold uppercase bg-navy text-sand px-3 py-1 rounded-full group-hover:bg-teal group-hover:text-navy transition-colors border border-teal/30">
